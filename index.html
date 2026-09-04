@@ -21,53 +21,143 @@
             darkMode: 'class'
         }
     </script>
-	<!-- Branded Green/Orange Telecom Signal Favicon -->
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%230f172a'/><circle cx='50' cy='50' r='38' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='18' fill='%2310b981'/></svg>">
+	<!-- Branded Green/Gold Telecom Signal Favicon -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%230b211b'/><circle cx='50' cy='50' r='38' fill='none' stroke='%23d9a441' stroke-width='8'/><circle cx='50' cy='50' r='18' fill='%232f9e76'/></svg>">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        .gradient-bg { background: linear-gradient(135deg, #0b1120 0%, #1e293b 100%); }
-        .glass-card { background: rgba(30, 41, 59, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .tab-btn-active { background: #ea580c; color: #ffffff; }
-        .service-active { background: #ea580c; color: #ffffff; border-color: #ea580c; }
-        
-        /* Universal Equalizer Animation */
-        .equalizer-wrap {
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-            height: 20px;
+        /* ============ DESIGN TOKENS ============ */
+        :root {
+            --ink-950: #081712;
+            --ink-900: #0b211b;
+            --ink-800: #0e241d;
+            --ink-700: #123028;
+            --ink-600: #163a2f;
+            --line: rgba(217, 164, 65, 0.16);
+            --line-soft: rgba(217, 164, 65, 0.10);
+            --paper: #eef3ee;
+            --paper-dim: #b9c7bf;
+            --paper-mute: #86988d;
+            --paper-faint: #6e8177;
+            --gold: #d9a441;
+            --gold-strong: #e4b65e;
+            --gold-hover: #c08b2e;
+            --jade: #2f9e76;
+            --jade-strong: #57c79a;
+            --jade-hover: #257e5e;
+            --rust: #b23a3a;
+            --rust-strong: #e17a7a;
+            --rust-hover: #9a2f2f;
+            --amber: #c79a3a;
+            --amber-strong: #e0b84d;
+            --teal: #3e97b8;
+            --teal-strong: #5fb8cc;
         }
-        .equalizer-bar {
-            width: 3.5px;
-            height: 16px;
-            background-color: #ffffff;
-            border-radius: 2px;
-            animation: bounce 0.9s ease-in-out infinite;
+        html.light {
+            --paper: #23291f;
+            --paper-dim: #4d5346;
+            --paper-mute: #6f7563;
+            --paper-faint: #8a8f7d;
+            --line: rgba(180, 138, 58, 0.22);
+            --line-soft: rgba(180, 138, 58, 0.14);
         }
+
+        body { font-family: 'IBM Plex Sans', ui-sans-serif, system-ui, sans-serif; letter-spacing: 0.005em; }
+        h1, h2, h3, .font-display { font-family: 'Space Grotesk', 'IBM Plex Sans', sans-serif; letter-spacing: -0.01em; }
+        code, pre, .font-mono { font-family: 'IBM Plex Mono', ui-monospace, monospace !important; }
+
+        .gradient-bg { background: radial-gradient(120% 140% at 15% 0%, #163a2f 0%, #0b211b 45%, #081712 100%); color: var(--paper); }
+        .glass-card { background: rgba(18, 48, 40, 0.6); backdrop-filter: blur(14px); border: 1px solid var(--line); }
+        .tab-btn-active { background: var(--gold) !important; color: var(--ink-950) !important; }
+        .tab-btn-active.text-white { color: var(--ink-950) !important; }
+        .service-active { background: var(--gold) !important; color: var(--ink-950) !important; border-color: var(--gold) !important; }
+
+        /* Equalizer loader */
+        .equalizer-wrap { display: inline-flex; align-items: center; gap: 3px; height: 20px; }
+        .equalizer-bar { width: 3.5px; height: 16px; background-color: currentColor; border-radius: 2px; animation: bounce 0.9s ease-in-out infinite; }
         .equalizer-bar:nth-child(2) { animation-delay: 0.15s; height: 22px; }
         .equalizer-bar:nth-child(3) { animation-delay: 0.35s; height: 12px; }
         .equalizer-bar:nth-child(4) { animation-delay: 0.1s; height: 20px; }
         .equalizer-bar:nth-child(5) { animation-delay: 0.25s; height: 14px; }
+        @keyframes bounce { 0%, 100% { transform: scaleY(0.25); } 50% { transform: scaleY(1.1); } }
 
-        @keyframes bounce {
-            0%, 100% { transform: scaleY(0.25); }
-            50% { transform: scaleY(1.1); }
-        }
+        /* ============ RECOLOR TAILWIND UTILITIES (structure untouched, palette swapped) ============ */
+        .rounded-2xl { border-radius: 14px !important; }
+        .rounded-xl { border-radius: 10px !important; }
+        .rounded-lg { border-radius: 8px !important; }
+
+        .bg-slate-900, .bg-slate-950 { background-color: var(--ink-800) !important; border-color: var(--line) !important; }
+        .bg-slate-950\/80, .bg-slate-900\/80 { background-color: rgba(14, 36, 29, 0.85) !important; }
+        .bg-slate-800 { background-color: var(--ink-700) !important; }
+        .hover\:bg-slate-800:hover { background-color: var(--ink-600) !important; }
+        .hover\:bg-slate-700:hover { background-color: var(--ink-600) !important; }
+        .border-slate-700, .border-slate-800 { border-color: var(--line) !important; }
+
+        .text-slate-100 { color: var(--paper) !important; }
+        .text-slate-200 { color: var(--paper) !important; opacity: 0.92; }
+        .text-slate-300 { color: var(--paper-dim) !important; }
+        .text-slate-400 { color: var(--paper-mute) !important; }
+        .text-slate-500 { color: var(--paper-faint) !important; }
+
+        .bg-orange-600 { background-color: var(--gold) !important; color: var(--ink-950) !important; }
+        .hover\:bg-orange-700:hover { background-color: var(--gold-hover) !important; }
+        .text-orange-500 { color: var(--gold) !important; }
+        .text-orange-400 { color: var(--gold-strong) !important; }
+        .border-orange-500 { border-color: var(--gold) !important; }
+        .hover\:border-orange-500:hover { border-color: var(--gold) !important; }
+        .focus\:border-orange-500:focus { border-color: var(--gold) !important; }
+        .accent-orange-500 { accent-color: var(--gold) !important; }
+
+        .bg-green-600 { background-color: var(--jade) !important; }
+        .hover\:bg-green-700:hover { background-color: var(--jade-hover) !important; }
+        .text-green-400 { color: var(--jade-strong) !important; }
+        .bg-green-950 { background-color: #0e2b22 !important; }
+        .border-green-800 { border-color: var(--jade) !important; }
+        .text-green-300 { color: var(--jade-strong) !important; }
+        .border-green-500 { border-color: var(--jade) !important; }
+
+        .bg-red-600 { background-color: var(--rust) !important; }
+        .hover\:bg-red-700:hover { background-color: var(--rust-hover) !important; }
+        .text-red-400 { color: var(--rust-strong) !important; }
+        .bg-red-950 { background-color: #2a1414 !important; }
+        .border-red-800 { border-color: var(--rust) !important; }
+        .text-red-300 { color: var(--rust-strong) !important; }
+        .border-red-500 { border-color: var(--rust) !important; }
+
+        .bg-yellow-950 { background-color: #2b2308 !important; }
+        .text-yellow-400 { color: var(--amber-strong) !important; }
+        .border-yellow-800 { border-color: var(--amber) !important; }
+
+        .bg-blue-950 { background-color: #0c2a30 !important; }
+        .text-blue-400 { color: var(--teal-strong) !important; }
+        .border-blue-800 { border-color: var(--teal) !important; }
+
+        header { border-color: var(--line) !important; }
+        footer { border-color: var(--line) !important; }
+
+        .brand-mark { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(145deg, var(--gold), var(--gold-hover)); display: flex; align-items: center; justify-content: center; color: var(--ink-950); font-size: 15px; flex-shrink: 0; }
+        .step-num { width: 26px; height: 26px; border-radius: 999px; background: var(--gold); color: var(--ink-950); font-weight: 700; font-size: 12px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .copy-btn { transition: transform .12s ease; }
+        .copy-btn:active { transform: scale(0.94); }
+        .divider-dot::before { content: ""; }
 
         /* Light Theme Overrides */
-        html.light .gradient-bg { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); color: #0f172a; }
-        html.light .glass-card { background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(12px); border: 1px solid rgba(0, 0, 0, 0.08); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
-        html.light header { border-color: #e2e8f0; }
-        html.light header h1 span { color: #1e293b; }
-        html.light footer { border-color: #cbd5e1; color: #64748b; }
-        html.light input, html.light select, html.light textarea { background-color: #f8fafc !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
-        html.light .bg-slate-900 { background-color: #f1f5f9 !important; border-color: #e2e8f0 !important; }
-        html.light .bg-slate-950 { background-color: #e2e8f0 !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
-        html.light .text-slate-100 { color: #0f172a !important; }
-        html.light .text-slate-200 { color: #1e293b !important; }
-        html.light .text-slate-300 { color: #334155 !important; }
-        html.light .text-slate-400 { color: #64748b !important; }
-        html.light .border-slate-700, html.light .border-slate-800 { border-color: #e2e8f0 !important; }
+        html.light body { background: linear-gradient(160deg, #f4f0e4 0%, #eee7d6 100%); }
+        html.light .gradient-bg { background: linear-gradient(160deg, #f4f0e4 0%, #eee7d6 100%); color: var(--ink-900); }
+        html.light .glass-card { background: rgba(255, 253, 246, 0.86); backdrop-filter: blur(12px); border: 1px solid var(--line); box-shadow: 0 6px 20px -8px rgba(35, 41, 31, 0.15); }
+        html.light header { background: rgba(255, 253, 246, 0.9); }
+        html.light header h1 span { color: var(--ink-900); }
+        html.light input, html.light select, html.light textarea { background-color: #fbf9f2 !important; color: var(--ink-900) !important; border-color: var(--line) !important; }
+        html.light .bg-slate-900, html.light .bg-slate-950, html.light .bg-slate-800 { background-color: #f4f0e2 !important; border-color: var(--line) !important; }
+        html.light .hover\:bg-slate-800:hover, html.light .hover\:bg-slate-700:hover { background-color: #ebe4cf !important; }
+        html.light .text-slate-100 { color: var(--ink-900) !important; }
+        html.light .text-slate-200 { color: #2c3325 !important; }
+        html.light .text-slate-300 { color: #4d5346 !important; }
+        html.light .text-slate-400 { color: #6f7563 !important; }
+        html.light .border-slate-700, html.light .border-slate-800 { border-color: var(--line) !important; }
+        html.light pre#code-snippet-box, html.light #sb-output { background-color: #221f14 !important; color: #e4b65e !important; }
     </style>
 </head>
 <body class="gradient-bg min-h-screen text-slate-100 font-sans flex flex-col justify-between">
@@ -78,7 +168,10 @@
     <!-- MAIN HEADER -->
     <header class="border-b border-slate-800 py-4 glass-card sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
-            <h1 class="text-xl sm:text-2xl font-black tracking-wider text-orange-500">VINNIE <span class="text-slate-100">DIGITAL HUB</span></h1>
+            <div class="flex items-center gap-3">
+                <div class="brand-mark"><i class="fa-solid fa-tower-broadcast"></i></div>
+                <h1 class="text-xl sm:text-2xl font-black tracking-wide text-orange-500 font-display">VINNIE <span class="text-slate-100">DIGITAL HUB</span></h1>
+            </div>
             <div class="flex items-center gap-2 sm:gap-3">
                 <button onclick="switchMainTab('direct')" id="tab-btn-direct" class="px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold tab-btn-active transition">Store</button>
                 <button onclick="switchMainTab('agent')" id="tab-btn-agent" class="px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-300 hover:bg-slate-800 transition">Agent Portal</button>
@@ -95,6 +188,53 @@
         
         <!-- SECTION 1: DIRECT CLIENT STORE & OFFERS -->
         <div id="section-direct" class="main-tab-content">
+
+            <!-- INTRO -->
+            <div class="mb-6">
+                <h2 class="text-2xl sm:text-3xl font-bold font-display text-slate-100">Airtime, data, minutes and SMS — sent in seconds.</h2>
+                <p class="text-sm text-slate-400 mt-2 max-w-xl">Pay with an M-Pesa STK prompt for instant, automatic delivery, or use the Paybill below if you'd rather pay manually. Every network is supported.</p>
+            </div>
+
+            <!-- MANUAL PAYBILL GUIDE (ALWAYS VISIBLE) -->
+            <div class="glass-card p-5 sm:p-6 rounded-2xl mb-6 border border-slate-800">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                    <div class="flex items-center gap-2">
+                        <i class="fa-solid fa-building-columns text-orange-500"></i>
+                        <h3 class="font-bold text-sm sm:text-base text-slate-100">Prefer to pay manually? Use our Paybill</h3>
+                    </div>
+                    <button onclick="openInfoModal('PAYBILL')" class="text-xs font-bold text-orange-400 hover:text-orange-300 flex items-center gap-1.5 self-start sm:self-auto">
+                        Full guide <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </button>
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+                    <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase">Paybill / Business No.</div>
+                        <div class="flex items-center justify-between mt-1">
+                            <span class="font-mono text-base sm:text-lg font-bold text-orange-400" id="paybill-number-display">4046007</span>
+                            <button onclick="copyText('4046007', 'Paybill number copied!')" class="copy-btn text-slate-400 hover:text-orange-400 text-xs"><i class="fa-regular fa-copy"></i></button>
+                        </div>
+                    </div>
+                    <div class="bg-slate-900 rounded-xl p-3 border border-slate-800 col-span-2 sm:col-span-1">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase">Account Number</div>
+                        <div class="mt-1 text-xs sm:text-sm font-bold text-slate-100 leading-snug">The phone number to receive the airtime/bundle</div>
+                    </div>
+                    <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase">Amount</div>
+                        <div class="mt-1 text-xs sm:text-sm font-bold text-slate-100">Value you want to send</div>
+                    </div>
+                    <div class="bg-slate-900 rounded-xl p-3 border border-slate-800">
+                        <div class="text-[10px] font-bold text-slate-400 uppercase">Delivery</div>
+                        <div class="mt-1 text-xs sm:text-sm font-bold text-jade-strong" style="color:var(--jade-strong);">Automatic, within moments</div>
+                    </div>
+                </div>
+                <ol class="grid sm:grid-cols-5 gap-3 text-xs text-slate-300">
+                    <li class="flex items-start gap-2"><span class="step-num">1</span><span>Open M-Pesa &rarr; <strong class="text-slate-100">Lipa na M-Pesa</strong> &rarr; <strong class="text-slate-100">Pay Bill</strong></span></li>
+                    <li class="flex items-start gap-2"><span class="step-num">2</span><span>Business No: <strong class="text-orange-400 font-mono">4046007</strong></span></li>
+                    <li class="flex items-start gap-2"><span class="step-num">3</span><span>Account No: <strong class="text-slate-100">receiving phone number</strong></span></li>
+                    <li class="flex items-start gap-2"><span class="step-num">4</span><span>Enter the <strong class="text-slate-100">amount</strong>, then your PIN</span></li>
+                    <li class="flex items-start gap-2"><span class="step-num">5</span><span>Confirm — value lands automatically</span></li>
+                </ol>
+            </div>
             
             <!-- SERVICES TOGGLE BAR -->
             <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 p-1.5 glass-card rounded-2xl mb-8">
@@ -122,7 +262,7 @@
             <div id="view-AIRTIME" class="service-view glass-card p-6 sm:p-8 rounded-2xl shadow-xl space-y-6">
                 <div class="flex justify-between items-center border-b border-slate-800 pb-4">
                     <div>
-                        <h2 class="text-lg sm:text-xl font-bold text-orange-500 flex items-center gap-2">
+                        <h2 class="text-lg sm:text-xl font-bold text-orange-500 flex items-center gap-2 font-display">
                             <i class="fa-solid fa-bolt"></i> Instant Airtime Top-Up
                         </h2>
                         <p class="text-xs text-slate-400 mt-1">Direct single & bulk automatic recharges across all networks.</p>
@@ -164,6 +304,7 @@
                             <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
                         </div>
                     </button>
+                    <p class="text-[11px] text-slate-500 text-center -mt-2">No STK prompt? Use the <button onclick="openInfoModal('PAYBILL')" class="text-orange-400 hover:text-orange-300 font-bold">Paybill 4046007 guide</button> above instead.</p>
                 </div>
 
                 <!-- BULK AIRTIME FORM WITH CSV & EQUAL SPLIT -->
@@ -250,7 +391,7 @@
             <!-- SECURE LOGIN HEADER -->
             <div class="glass-card p-6 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div>
-                    <h2 class="text-lg font-bold text-orange-500"><i class="fa-solid fa-user-shield"></i> Agent Terminal Login</h2>
+                    <h2 class="text-lg font-bold text-orange-500 font-display"><i class="fa-solid fa-user-shield"></i> Agent Terminal Login</h2>
                     <p class="text-xs text-slate-400 mt-1">Authenticate using your phone number and 4-digit PIN.</p>
                 </div>
                 <div class="flex gap-2 w-full sm:w-auto">
@@ -268,7 +409,7 @@
             <div class="grid md:grid-cols-3 gap-6">
                 <!-- Vending Card -->
                 <div class="glass-card p-6 rounded-2xl col-span-2 space-y-4">
-                    <h2 class="text-base font-bold text-orange-500 flex items-center gap-2"><i class="fa-solid fa-wallet"></i> Agent Vending Terminal</h2>
+                    <h2 class="text-base font-bold text-orange-500 flex items-center gap-2 font-display"><i class="fa-solid fa-wallet"></i> Agent Vending Terminal</h2>
                     
                     <div class="grid grid-cols-2 gap-3">
                         <div>
@@ -286,11 +427,11 @@
                         <div class="grid grid-cols-2 gap-3">
                             <label class="flex flex-col p-3 rounded-lg border border-slate-700 bg-slate-900 cursor-pointer hover:border-orange-500">
                                 <div class="flex items-center gap-2 font-bold text-xs"><input type="radio" name="agentPayMethod" value="FLOAT" checked> Pre-Paid Float</div>
-                                <span class="text-[10px] text-green-400 mt-1">3% Instant Commission</span>
+                                <span class="text-[10px] mt-1" style="color:var(--jade-strong);">3% Instant Commission</span>
                             </label>
                             <label class="flex flex-col p-3 rounded-lg border border-slate-700 bg-slate-900 cursor-pointer hover:border-orange-500">
                                 <div class="flex items-center gap-2 font-bold text-xs"><input type="radio" name="agentPayMethod" value="STK_PROMPT"> M-Pesa Prompt</div>
-                                <span class="text-[10px] text-green-400 mt-1">1% - 2% Commission</span>
+                                <span class="text-[10px] mt-1" style="color:var(--jade-strong);">1% - 2% Commission</span>
                             </label>
                         </div>
                     </div>
@@ -315,7 +456,7 @@
                 <div class="space-y-4">
                     <div class="glass-card p-6 rounded-2xl space-y-3">
                         <h3 class="text-xs font-bold text-orange-500 uppercase tracking-wider">Float Wallet</h3>
-                        <div class="text-2xl font-black text-green-400 font-mono" id="stat-float">KES 0.00</div>
+                        <div class="text-2xl font-black font-mono" style="color:var(--jade-strong);" id="stat-float">KES 0.00</div>
                         <div class="flex justify-between text-xs pt-2 border-t border-slate-800">
                             <span class="text-slate-400">STK Commissions:</span>
                             <span class="font-bold text-orange-400 font-mono" id="stat-stk">KES 0.00</span>
@@ -336,6 +477,7 @@
                                 <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
                             </div>
                         </button>
+                        <p class="text-[10px] text-slate-500">Float can also be loaded manually via Paybill <strong class="text-orange-400 font-mono">4046007</strong>, Account Number: your agent phone number.</p>
                     </div>
                 </div>
             </div>
@@ -348,7 +490,7 @@
             <div class="glass-card p-6 sm:p-8 rounded-2xl space-y-5">
                 <div class="flex justify-between items-center border-b border-slate-800 pb-3">
                     <div>
-                        <h2 class="text-lg font-bold text-orange-500"><i class="fa-solid fa-key"></i> Developer Security & API Credentials</h2>
+                        <h2 class="text-lg font-bold text-orange-500 font-display"><i class="fa-solid fa-key"></i> Developer Security & API Credentials</h2>
                         <p class="text-xs text-slate-400 mt-0.5">Automate airtime top-ups with high-throughput JSON API at wholesale rates.</p>
                     </div>
                     <span class="text-xs px-2.5 py-1 bg-slate-800 text-orange-400 rounded-md font-mono">REST JSON v5.0</span>
@@ -382,13 +524,13 @@
 
                 <div id="key-display-box" class="hidden p-3.5 bg-slate-950 border border-green-700 rounded-xl font-mono text-xs text-green-400 break-all flex justify-between items-center">
                     <span id="active-api-key"></span>
-                    <button onclick="copyActiveKey()" class="px-2 py-1 bg-slate-800 text-slate-200 rounded hover:bg-slate-700 text-xs">Copy</button>
+                    <button onclick="copyActiveKey()" class="px-2 py-1 bg-slate-800 text-slate-200 rounded hover:bg-slate-700 text-xs"><i class="fa-regular fa-copy"></i> Copy</button>
                 </div>
             </div>
 
             <!-- INTERACTIVE DEVELOPER SANDBOX -->
             <div class="glass-card p-6 sm:p-8 rounded-2xl space-y-4">
-                <h2 class="text-lg font-bold text-orange-500"><i class="fa-solid fa-terminal"></i> In-Browser Sandbox Console</h2>
+                <h2 class="text-lg font-bold text-orange-500 font-display"><i class="fa-solid fa-terminal"></i> In-Browser Sandbox Console</h2>
                 <p class="text-xs text-slate-400">Test live requests using your generated API key directly against your backend endpoints.</p>
 
                 <div class="grid sm:grid-cols-3 gap-3">
@@ -429,7 +571,7 @@
             <!-- CODE GENERATOR -->
             <div class="glass-card p-6 sm:p-8 rounded-2xl space-y-4">
                 <div class="flex flex-wrap justify-between items-center border-b border-slate-800 pb-3 gap-2">
-                    <h2 class="text-base font-bold text-orange-500"><i class="fa-solid fa-code"></i> Integration Code Generators</h2>
+                    <h2 class="text-base font-bold text-orange-500 font-display"><i class="fa-solid fa-code"></i> Integration Code Generators</h2>
                     <div class="flex flex-wrap gap-1 text-xs font-bold">
                         <button onclick="switchLangCode('node')" id="btn-lang-node" class="px-2.5 py-1 bg-orange-600 text-white rounded">Node.js</button>
                         <button onclick="switchLangCode('python')" id="btn-lang-python" class="px-2.5 py-1 bg-slate-800 text-slate-300 rounded">Python</button>
@@ -439,7 +581,12 @@
                         <button onclick="switchLangCode('go')" id="btn-lang-go" class="px-2.5 py-1 bg-slate-800 text-slate-300 rounded">Go</button>
                     </div>
                 </div>
-                <pre class="bg-slate-950 p-4 rounded-xl font-mono text-xs text-orange-300 overflow-x-auto border border-slate-800" id="code-snippet-box"></pre>
+                <div class="relative">
+                    <button id="btn-copy-snippet" onclick="copySnippet()" class="copy-btn absolute top-3 right-3 z-10 flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] font-bold bg-slate-800 text-slate-200 hover:bg-slate-700 border border-slate-700">
+                        <i class="fa-regular fa-copy"></i> <span id="txt-copy-snippet">Copy code</span>
+                    </button>
+                    <pre class="bg-slate-950 p-4 pt-12 rounded-xl font-mono text-xs text-orange-300 overflow-x-auto border border-slate-800" id="code-snippet-box"></pre>
+                </div>
             </div>
 
         </div>
@@ -450,7 +597,7 @@
     <div id="checkout-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="glass-card bg-slate-900 border border-slate-700 w-full max-w-md p-6 rounded-2xl shadow-2xl space-y-5 relative">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 class="font-bold text-orange-500 text-base" id="modal-title">Complete Offer Checkout</h3>
+                <h3 class="font-bold text-orange-500 text-base font-display" id="modal-title">Complete Offer Checkout</h3>
                 <button onclick="closeModal()" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
 
@@ -485,6 +632,7 @@
                     <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
                 </div>
             </button>
+            <p class="text-[11px] text-slate-500 text-center">Or pay manually via <button onclick="closeModal(); openInfoModal('PAYBILL');" class="text-orange-400 hover:text-orange-300 font-bold">Paybill 4046007</button> — Account Number: the recipient's phone number above.</p>
         </div>
     </div>
 
@@ -494,7 +642,7 @@
             <div class="w-12 h-12 rounded-full bg-orange-500/20 text-orange-500 flex items-center justify-center mx-auto text-xl">
                 <i class="fa-solid fa-clock-rotate-left"></i>
             </div>
-            <h3 class="font-bold text-lg text-slate-100" id="cs-title">Service Coming Soon</h3>
+            <h3 class="font-bold text-lg text-slate-100 font-display" id="cs-title">Service Coming Soon</h3>
             <p class="text-xs text-slate-400" id="cs-desc">We are finalizing automated carrier conversion channels for Bonga Points and Credo cashouts. Stay tuned!</p>
             <button onclick="closeComingSoonModal()" class="w-full bg-slate-800 hover:bg-slate-700 font-bold py-2.5 rounded-xl text-xs transition">Understood</button>
         </div>
@@ -504,7 +652,7 @@
     <div id="info-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
         <div class="glass-card bg-slate-900 border border-slate-700 w-full max-w-lg p-6 rounded-2xl shadow-2xl space-y-4">
             <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <h3 class="font-bold text-orange-500 text-base" id="info-modal-title">Information</h3>
+                <h3 class="font-bold text-orange-500 text-base font-display" id="info-modal-title">Information</h3>
                 <button onclick="closeInfoModal()" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
             </div>
             <div class="text-xs text-slate-300 space-y-3 leading-relaxed max-h-80 overflow-y-auto" id="info-modal-content"></div>
@@ -517,6 +665,7 @@
         <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p>&copy; 2026 Vinnie Digital Hub. High-Volume Telecom Vending Gateway.</p>
             <div class="flex flex-wrap gap-4 text-slate-400">
+                <button onclick="openInfoModal('PAYBILL')" class="hover:text-orange-500">Manual Paybill Guide</button>
                 <button onclick="openInfoModal('DOCS')" class="hover:text-orange-500">API Documentation</button>
                 <button onclick="openInfoModal('TERMS')" class="hover:text-orange-500">Terms of Service</button>
                 <button onclick="openInfoModal('REFUND')" class="hover:text-orange-500">Refund Policy</button>
@@ -681,6 +830,28 @@
             toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check text-green-400' : 'fa-circle-xmark text-red-400'} text-lg"></i> <div>${msg}</div>`;
             toast.classList.remove('hidden');
             setTimeout(() => toast.classList.add('hidden'), 6000);
+        }
+
+        // COPY-TO-CLIPBOARD HELPERS
+        function copyText(text, successMsg) {
+            navigator.clipboard.writeText(text).then(() => {
+                showToast(successMsg || "Copied to clipboard!", "success");
+            }).catch(() => {
+                showToast("Could not copy — please copy manually.", "error");
+            });
+        }
+
+        function copySnippet() {
+            const code = document.getElementById('code-snippet-box').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                const txt = document.getElementById('txt-copy-snippet');
+                const original = txt.innerText;
+                txt.innerText = "Copied!";
+                showToast("Code snippet copied to clipboard!", "success");
+                setTimeout(() => { txt.innerText = original; }, 1800);
+            }).catch(() => {
+                showToast("Could not copy — please copy manually.", "error");
+            });
         }
 
         // 5. DIRECT SINGLE AIRTIME
@@ -1196,40 +1367,67 @@ func main() {
             const title = document.getElementById('info-modal-title');
             const content = document.getElementById('info-modal-content');
 
-            if (type === 'DOCS') {
+            if (type === 'PAYBILL') {
+                title.innerText = "How to Pay Manually via Paybill";
+                content.innerHTML = `
+                    <p>If you would rather not use the M-Pesa STK prompt — or it fails to arrive — you can pay manually with Lipa na M-Pesa Paybill and your order will still be fulfilled automatically once payment is confirmed.</p>
+                    <div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-1.5">
+                        <div class="flex justify-between text-xs"><span class="text-slate-400">Paybill / Business Number</span><span class="font-mono font-bold text-orange-400">4046007</span></div>
+                        <div class="flex justify-between text-xs"><span class="text-slate-400">Account Number</span><span class="font-bold text-slate-100">Phone number to receive it</span></div>
+                    </div>
+                    <p><strong>1. Open M-Pesa</strong> on your phone and select <strong>Lipa na M-Pesa &rarr; Pay Bill</strong>.</p>
+                    <p><strong>2. Business Number:</strong> enter <strong>4046007</strong>.</p>
+                    <p><strong>3. Account Number:</strong> enter the phone number that should receive the airtime, data, minutes or SMS bundle. This can be your own number or someone else's — whoever you're topping up.</p>
+                    <p><strong>4. Amount:</strong> enter the exact airtime value, or the exact price shown for the bundle you want (check the Data, Minutes or SMS tabs for current prices).</p>
+                    <p><strong>5. Enter your M-Pesa PIN</strong> and confirm the payment.</p>
+                    <p><strong>6. Delivery:</strong> once M-Pesa confirms the payment, the airtime or bundle is credited to the account number you entered automatically, usually within moments. Keep your M-Pesa confirmation SMS as proof of payment.</p>
+                    <p><strong>Didn't receive it?</strong> If nothing arrives within 5 minutes of a successful M-Pesa payment, contact WhatsApp Support with your M-Pesa confirmation message (transaction code, amount, and time) and it will be resolved promptly.</p>
+                `;
+            } else if (type === 'DOCS') {
                 title.innerText = "Developer REST API Reference";
                 content.innerHTML = `
                     <p>Integrate programmatic airtime recharge into your bots, web platforms, or billing systems with 3% wholesale margin.</p>
-                    <div class="bg-slate-950 p-2.5 rounded font-mono text-[11px] text-orange-400">Endpoint: POST https://airtime-backend-w63z.onrender.com/api/v1/developer/send-airtime</div>
+                    <div class="bg-slate-950 p-2.5 rounded font-mono text-[11px] text-orange-400 flex justify-between items-center gap-2">
+                        <span>Endpoint: POST https://airtime-backend-w63z.onrender.com/api/v1/developer/send-airtime</span>
+                        <button onclick="copyText('https://airtime-backend-w63z.onrender.com/api/v1/developer/send-airtime', 'Endpoint copied!')" class="copy-btn text-slate-400 hover:text-orange-400 flex-shrink-0"><i class="fa-regular fa-copy"></i></button>
+                    </div>
                     <p><strong>Required Headers:</strong><br>
-                    • <code>x-api-key</code>: Your live developer key.<br>
-                    • <code>x-idempotency-key</code>: Unique UUID string per transaction to safeguard against double charging.</p>
+                    &bull; <code>x-api-key</code>: Your live developer key.<br>
+                    &bull; <code>x-idempotency-key</code>: Unique UUID string per transaction to safeguard against double charging.</p>
                     <p><strong>Check Balance:</strong><br>
                     <code>GET /api/v1/developer/balance</code> with your <code>x-api-key</code> header.</p>
+                    <p><strong>Typical Response Codes:</strong><br>
+                    &bull; <code>200</code> — request accepted, delivery in progress.<br>
+                    &bull; <code>401</code> — missing or invalid <code>x-api-key</code>.<br>
+                    &bull; <code>409</code> — duplicate <code>x-idempotency-key</code> (transaction already processed).<br>
+                    &bull; <code>422</code> — invalid phone number or unsupported amount.</p>
+                    <p><strong>Rate Limits & Support:</strong> Wholesale developer keys are throttled per your agreed volume tier. For higher throughput or webhook delivery callbacks, reach out via WhatsApp Support.</p>
                 `;
             } else if (type === 'TERMS') {
                 title.innerText = "Terms of Service";
                 content.innerHTML = `
                     <p><strong>1. Introduction & Overview:</strong> Welcome to Vinnie Digital Hub. By accessing or using our developer APIs, vending terminals, or digital services, you agree to be bound by these legal terms.</p>
                     <p><strong>2. Services Provided:</strong> Vinnie Digital Hub operates an automated digital infrastructure providing airtime vending, telecommunications bundles, data packages, and developer API distribution across licensed mobile operators in Kenya.</p>
-                    <p><strong>3. Payment Processing:</strong> Payments are processed securely via verified mobile money rails (M-Pesa) and certified payment gateways including Visa and Mastercard. All card transactions conform to strict 3D-Secure standards. We do not store full card details or CVVs on our local servers.</p>
+                    <p><strong>3. Payment Processing:</strong> Payments are processed securely via verified mobile money rails (M-Pesa) and certified payment gateways including Visa and Mastercard. All card transactions conform to strict 3D-Secure standards. We do not store full card details or CVVs on our local servers. Manual payments via Paybill 4046007 are treated identically to STK-initiated payments once confirmed by M-Pesa.</p>
                     <p><strong>4. User Obligations:</strong> Users agree not to misuse automated endpoints, initiate unauthorized stress tests, or exploit platform infrastructure. Misuse may result in immediate suspension of developer keys and float access.</p>
-                    <p><strong>5. Governing Law:</strong> These terms are governed and construed under the legal framework of the Republic of Kenya.</p>
+                    <p><strong>5. Accuracy of Recipient Details:</strong> Users are responsible for entering correct recipient phone numbers, whether ordering via the store, the agent terminal, the API, or the Paybill account number field.</p>
+                    <p><strong>6. Governing Law:</strong> These terms are governed and construed under the legal framework of the Republic of Kenya.</p>
                 `;
             } else if (type === 'REFUND') {
                 title.innerText = "Refund & Cancellation Policy";
                 content.innerHTML = `
                     <p><strong>1. Digital Delivery:</strong> Due to the instant and automated fulfillment of telecommunication airtime, data vouchers, and digital bundles, successfully completed orders dispatched to the designated phone number are considered consumed and cannot be reversed or returned.</p>
-                    <p><strong>2. Failed Transactions & Auto-Reversals:</strong> If your card or mobile money wallet is debited but our gateway fails to deliver the bundle or airtime due to carrier network timeout, our automated system initiates a reconciliation review. Reversals or wallet credits are completed within 24 to 48 hours.</p>
-                    <p><strong>3. Incorrect Destination Numbers:</strong> Customers and agents are solely responsible for ensuring the recipient phone number entered is accurate. We cannot recall or refund value dispatched to an unintended recipient.</p>
+                    <p><strong>2. Failed Transactions & Auto-Reversals:</strong> If your card or mobile money wallet is debited but our gateway fails to deliver the bundle or airtime due to carrier network timeout, our automated system initiates a reconciliation review. Reversals or wallet credits are completed within 24 to 48 hours. The same applies to manual Paybill 4046007 payments that are not automatically matched.</p>
+                    <p><strong>3. Incorrect Destination Numbers:</strong> Customers and agents are solely responsible for ensuring the recipient phone number entered — including the Account Number field when paying manually via Paybill — is accurate. We cannot recall or refund value dispatched to an unintended recipient.</p>
                     <p><strong>4. Dispute Resolution:</strong> To lodge a dispute regarding a failed transaction, provide your transaction reference, phone number, and timestamp to our support desk. Legitimate billing issues are addressed within 1 business day.</p>
                 `;
             } else if (type === 'PRIVACY') {
                 title.innerText = "Privacy Policy";
                 content.innerHTML = `
-                    <p><strong>1. Data Collected:</strong> We collect necessary transaction metadata including recipient phone numbers, payer mobile numbers, transaction amounts, and IP addresses exclusively to execute, verify, and reconcile requested telecommunications deliveries.</p>
+                    <p><strong>1. Data Collected:</strong> We collect necessary transaction metadata including recipient phone numbers, payer mobile numbers, transaction amounts, and IP addresses exclusively to execute, verify, and reconcile requested telecommunications deliveries. This includes payments made manually via Paybill 4046007, matched using the M-Pesa Account Number and transaction reference.</p>
                     <p><strong>2. Financial Data Security:</strong> All debit/credit card and mobile money billing requests are handled by accredited, PCI-compliant payment gateways. We never inspect, record, or retain sensitive payment instrument credentials.</p>
                     <p><strong>3. Data Protection:</strong> We do not sell, rent, or distribute personal information to third parties. Data is maintained strictly in accordance with the Kenya Data Protection Act.</p>
+                    <p><strong>4. Data Retention:</strong> Transaction metadata is retained only as long as necessary for reconciliation, fraud prevention, and legal or tax record-keeping obligations.</p>
                 `;
             } else if (type === 'AGENT_TERMS') {
                 title.innerText = "Agent Terms & Commissions";
@@ -1237,6 +1435,7 @@ func main() {
                     <p><strong>1. Float Vending Margin:</strong> Agents earn an immediate 3% wholesale discount on all prepaid float transactions.</p>
                     <p><strong>2. STK Prompt Mode:</strong> Agents earn 2% commission if paying over-the-counter cash or 1% if the customer pays on their own handset.</p>
                     <p><strong>3. Passive Referral Bonus:</strong> Earn 1% lifetime commission on all transaction volume processed by downline agents registered under your phone number.</p>
+                    <p><strong>4. Manual Float Loading:</strong> Float can also be loaded via Paybill 4046007, using your registered agent phone number as the Account Number.</p>
                 `;
             } else if (type === 'SUPPORT') {
                 title.innerText = "Engineering & Support Desk";
@@ -1245,6 +1444,7 @@ func main() {
                     <p><strong>Business:</strong> Vinnie Digital Hub</p>
                     <p><strong>WhatsApp:</strong> +254 784 910 115</p>
                     <p><strong>Hours:</strong> 24/7 Monitored Gateway</p>
+                    <p>When reporting a manual Paybill payment issue, include the M-Pesa transaction code, amount, Account Number used, and time of payment for the fastest resolution.</p>
                 `;
             }
             modal.classList.remove('hidden');
