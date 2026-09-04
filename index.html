@@ -1,0 +1,1258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vinnie Digital Hub - Telecom & Developer Gateway</title>
+    <script>
+        
+        (function() {
+            const savedTheme = localStorage.getItem('vdh-theme');
+            if (savedTheme === 'light' || (!savedTheme && window.matchMedia('(prefers-color-scheme: light)').matches)) {
+                document.documentElement.classList.add('light');
+            } else {
+                document.documentElement.classList.remove('light');
+            }
+        })();
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class'
+        }
+    </script>
+	<!-- Branded Green/Orange Telecom Signal Favicon -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='25' fill='%230f172a'/><circle cx='50' cy='50' r='38' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='18' fill='%2310b981'/></svg>">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .gradient-bg { background: linear-gradient(135deg, #0b1120 0%, #1e293b 100%); }
+        .glass-card { background: rgba(30, 41, 59, 0.75); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+        .tab-btn-active { background: #ea580c; color: #ffffff; }
+        .service-active { background: #ea580c; color: #ffffff; border-color: #ea580c; }
+        
+        /* Universal Equalizer Animation */
+        .equalizer-wrap {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            height: 20px;
+        }
+        .equalizer-bar {
+            width: 3.5px;
+            height: 16px;
+            background-color: #ffffff;
+            border-radius: 2px;
+            animation: bounce 0.9s ease-in-out infinite;
+        }
+        .equalizer-bar:nth-child(2) { animation-delay: 0.15s; height: 22px; }
+        .equalizer-bar:nth-child(3) { animation-delay: 0.35s; height: 12px; }
+        .equalizer-bar:nth-child(4) { animation-delay: 0.1s; height: 20px; }
+        .equalizer-bar:nth-child(5) { animation-delay: 0.25s; height: 14px; }
+
+        @keyframes bounce {
+            0%, 100% { transform: scaleY(0.25); }
+            50% { transform: scaleY(1.1); }
+        }
+
+        /* Light Theme Overrides */
+        html.light .gradient-bg { background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%); color: #0f172a; }
+        html.light .glass-card { background: rgba(255, 255, 255, 0.88); backdrop-filter: blur(12px); border: 1px solid rgba(0, 0, 0, 0.08); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        html.light header { border-color: #e2e8f0; }
+        html.light header h1 span { color: #1e293b; }
+        html.light footer { border-color: #cbd5e1; color: #64748b; }
+        html.light input, html.light select, html.light textarea { background-color: #f8fafc !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
+        html.light .bg-slate-900 { background-color: #f1f5f9 !important; border-color: #e2e8f0 !important; }
+        html.light .bg-slate-950 { background-color: #e2e8f0 !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
+        html.light .text-slate-100 { color: #0f172a !important; }
+        html.light .text-slate-200 { color: #1e293b !important; }
+        html.light .text-slate-300 { color: #334155 !important; }
+        html.light .text-slate-400 { color: #64748b !important; }
+        html.light .border-slate-700, html.light .border-slate-800 { border-color: #e2e8f0 !important; }
+    </style>
+</head>
+<body class="gradient-bg min-h-screen text-slate-100 font-sans flex flex-col justify-between">
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast-box" class="hidden fixed top-6 right-4 z-50 max-w-sm p-4 rounded-xl shadow-2xl transition-all duration-300"></div>
+
+    <!-- MAIN HEADER -->
+    <header class="border-b border-slate-800 py-4 glass-card sticky top-0 z-40">
+        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+            <h1 class="text-xl sm:text-2xl font-black tracking-wider text-orange-500">VINNIE <span class="text-slate-100">DIGITAL HUB</span></h1>
+            <div class="flex items-center gap-2 sm:gap-3">
+                <button onclick="switchMainTab('direct')" id="tab-btn-direct" class="px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold tab-btn-active transition">Store</button>
+                <button onclick="switchMainTab('agent')" id="tab-btn-agent" class="px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-300 hover:bg-slate-800 transition">Agent Portal</button>
+                <button onclick="switchMainTab('dev')" id="tab-btn-dev" class="px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold text-slate-300 hover:bg-slate-800 transition">Developer Hub</button>
+                <button id="theme-toggle-btn" onclick="toggleTheme()" class="p-2 rounded-xl text-slate-300 hover:text-orange-500 hover:bg-slate-800 transition" title="Toggle Theme">
+                    <i id="theme-toggle-icon" class="fa-solid fa-moon text-sm"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENT WRAPPER -->
+    <main class="max-w-4xl mx-auto px-4 py-8 w-full flex-grow">
+        
+        <!-- SECTION 1: DIRECT CLIENT STORE & OFFERS -->
+        <div id="section-direct" class="main-tab-content">
+            
+            <!-- SERVICES TOGGLE BAR -->
+            <div class="grid grid-cols-3 sm:grid-cols-6 gap-2 p-1.5 glass-card rounded-2xl mb-8">
+                <button onclick="switchService('AIRTIME')" id="srv-AIRTIME" class="service-nav-btn service-active py-3 rounded-xl font-bold text-xs transition flex flex-col items-center justify-center gap-1">
+                    <i class="fa-solid fa-mobile-screen"></i> <span>Airtime</span>
+                </button>
+                <button onclick="switchService('DATA')" id="srv-DATA" class="service-nav-btn text-slate-400 py-3 rounded-xl font-bold text-xs hover:bg-slate-800 transition flex flex-col items-center justify-center gap-1">
+                    <i class="fa-solid fa-wifi"></i> <span>Data Deals</span>
+                </button>
+                <button onclick="switchService('MINUTES')" id="srv-MINUTES" class="service-nav-btn text-slate-400 py-3 rounded-xl font-bold text-xs hover:bg-slate-800 transition flex flex-col items-center justify-center gap-1">
+                    <i class="fa-solid fa-phone-volume"></i> <span>Minutes</span>
+                </button>
+                <button onclick="switchService('SMS')" id="srv-SMS" class="service-nav-btn text-slate-400 py-3 rounded-xl font-bold text-xs hover:bg-slate-800 transition flex flex-col items-center justify-center gap-1">
+                    <i class="fa-solid fa-comment-sms"></i> <span>SMS Packs</span>
+                </button>
+                <button onclick="openComingSoonModal('Credo to M-Pesa Cashout')" class="service-nav-btn text-slate-400 py-3 rounded-xl font-bold text-xs hover:bg-slate-800 transition flex flex-col items-center justify-center gap-1">
+                    <i class="fa-solid fa-money-bill-transfer text-orange-400"></i> <span>Credo-Mpesa</span>
+                </button>
+                <button onclick="openComingSoonModal('Bonga Points to M-Pesa')" class="service-nav-btn text-slate-400 py-3 rounded-xl font-bold text-xs hover:bg-slate-800 transition flex flex-col items-center justify-center gap-1">
+                    <i class="fa-solid fa-coins text-yellow-400"></i> <span>Bonga-Mpesa</span>
+                </button>
+            </div>
+
+            <!-- AIRTIME VIEW -->
+            <div id="view-AIRTIME" class="service-view glass-card p-6 sm:p-8 rounded-2xl shadow-xl space-y-6">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+                    <div>
+                        <h2 class="text-lg sm:text-xl font-bold text-orange-500 flex items-center gap-2">
+                            <i class="fa-solid fa-bolt"></i> Instant Airtime Top-Up
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">Direct single & bulk automatic recharges across all networks.</p>
+                    </div>
+                    <div class="flex items-center gap-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800">
+                        <input type="checkbox" id="bulk-mode-toggle" onchange="toggleBulkAirtimeMode()" class="w-4 h-4 accent-orange-500 rounded cursor-pointer">
+                        <label for="bulk-mode-toggle" class="text-xs font-bold text-slate-300 cursor-pointer">Bulk Mode</label>
+                    </div>
+                </div>
+
+                <!-- SINGLE AIRTIME FORM -->
+                <div id="single-airtime-fields" class="space-y-4">
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="text-xs font-bold text-slate-300">Recipient Phone Number (Receives Airtime)</label>
+                            <span id="carrier-badge" class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-slate-800 text-slate-400">Detecting...</span>
+                        </div>
+                        <input type="tel" id="airtime-recipient" oninput="detectCarrier(this.value)" placeholder="e.g. 0712345678" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-slate-100 focus:border-orange-500 outline-none">
+                    </div>
+
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" id="airtime-diff-payer" onchange="toggleAirtimePayer()" class="w-4 h-4 accent-orange-500 rounded cursor-pointer">
+                        <label for="airtime-diff-payer" class="text-xs text-slate-400 cursor-pointer">Paying with a different M-Pesa number</label>
+                    </div>
+
+                    <div id="airtime-payer-box" class="hidden">
+                        <label class="block text-xs font-bold text-slate-300 mb-1.5">M-Pesa Payer Number (PIN Prompt Target)</label>
+                        <input type="tel" id="airtime-payer" placeholder="e.g. 0799887766" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-slate-100 focus:border-orange-500 outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1.5">Airtime Amount (KES)</label>
+                        <input type="number" id="airtime-amount" placeholder="e.g. 50" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-slate-100 focus:border-orange-500 outline-none">
+                    </div>
+
+                    <button id="btn-airtime-single" onclick="submitAirtimeSingle()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 rounded-xl transition flex justify-center items-center gap-2">
+                        <span id="txt-airtime-single">Buy Airtime Now</span>
+                        <div id="anim-airtime-single" class="hidden equalizer-wrap">
+                            <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- BULK AIRTIME FORM WITH CSV & EQUAL SPLIT -->
+                <div id="bulk-airtime-fields" class="hidden space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1.5">M-Pesa Payer Phone (Authorizes STK Prompt)</label>
+                        <input type="tel" id="bulk-payer" placeholder="e.g. 0712345678" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-slate-100 focus:border-orange-500 outline-none text-xs">
+                    </div>
+
+                    <!-- BULK DISTRIBUTION MODE -->
+                    <div class="grid grid-cols-2 gap-3 p-1.5 bg-slate-900 rounded-xl border border-slate-800">
+                        <label class="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-slate-800 text-xs">
+                            <input type="radio" name="bulkModeType" value="CUSTOM" checked onchange="switchBulkType()" class="accent-orange-500">
+                            <span>Per-Number Amount (CSV/List)</span>
+                        </label>
+                        <label class="flex items-center gap-2 p-2 rounded-lg cursor-pointer hover:bg-slate-800 text-xs">
+                            <input type="radio" name="bulkModeType" value="SPLIT" onchange="switchBulkType()" class="accent-orange-500">
+                            <span>Equal Split Pool</span>
+                        </label>
+                    </div>
+
+                    <div id="bulk-split-pool-box" class="hidden space-y-2">
+                        <label class="block text-xs font-bold text-slate-300">Total Pool Amount (KES) to Share Equally</label>
+                        <input type="number" id="bulk-pool-amount" oninput="calculateBulk()" placeholder="e.g. 1000" class="w-full bg-slate-900 border border-slate-700 rounded-xl p-3 text-slate-100 focus:border-orange-500 outline-none text-xs">
+                    </div>
+
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label class="text-xs font-bold text-slate-300" id="bulk-input-label">Recipients List (Format: <code>0712345678, 50</code>)</label>
+                            <label class="cursor-pointer text-[11px] font-bold text-orange-400 hover:text-orange-300 flex items-center gap-1">
+                                <i class="fa-solid fa-file-csv"></i> Upload .CSV / .TXT
+                                <input type="file" id="bulk-file-upload" accept=".csv, .txt" onchange="handleBulkFileUpload(event)" class="hidden">
+                            </label>
+                        </div>
+                        <textarea id="bulk-input" oninput="calculateBulk()" rows="5" placeholder="0712345678, 50&#10;0722112233, 100&#10;0733445566, 25" class="w-full font-mono text-xs bg-slate-900 border border-slate-700 rounded-xl p-3 text-slate-100 focus:border-orange-500 outline-none"></textarea>
+                    </div>
+
+                    <div class="flex justify-between items-center p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs">
+                        <span class="text-slate-400">Total Valid Numbers: <strong id="bulk-count" class="text-slate-100 font-mono">0</strong></span>
+                        <span class="font-black text-orange-400">Total Due: KES <span id="bulk-total" class="font-mono text-sm">0</span></span>
+                    </div>
+
+                    <button id="btn-airtime-bulk" onclick="submitAirtimeBulk()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 rounded-xl transition flex justify-center items-center gap-2">
+                        <span id="txt-airtime-bulk">Pay & Dispatch Bulk Airtime</span>
+                        <div id="anim-airtime-bulk" class="hidden equalizer-wrap">
+                            <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- DATA DEALS VIEW -->
+            <div id="view-DATA" class="service-view hidden space-y-4">
+                <div class="glass-card p-4 rounded-xl flex justify-between items-center">
+                    <span class="text-sm font-bold text-orange-400"><i class="fa-solid fa-wifi"></i> Safaricom Bingwa Data Offers</span>
+                    <span class="text-xs text-slate-400">Auto-credited via Till Automation</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5" id="data-catalog"></div>
+            </div>
+
+            <!-- MINUTES VIEW -->
+            <div id="view-MINUTES" class="service-view hidden space-y-4">
+                <div class="glass-card p-4 rounded-xl flex justify-between items-center">
+                    <span class="text-sm font-bold text-orange-400"><i class="fa-solid fa-phone-volume"></i> Tunukiwa / Bingwa Minutes</span>
+                    <span class="text-xs text-slate-400">Direct Delivery</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5" id="minutes-catalog"></div>
+            </div>
+
+            <!-- SMS VIEW -->
+            <div id="view-SMS" class="service-view hidden space-y-4">
+                <div class="glass-card p-4 rounded-xl flex justify-between items-center">
+                    <span class="text-sm font-bold text-orange-400"><i class="fa-solid fa-comment-sms"></i> Unlimited SMS Packs</span>
+                    <span class="text-xs text-slate-400">Auto-Dialler Fulfillment</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5" id="sms-catalog"></div>
+            </div>
+
+        </div>
+
+        <!-- SECTION 2: AGENT PORTAL & FLOAT WALLET -->
+        <div id="section-agent" class="main-tab-content hidden space-y-6">
+            
+            <!-- SECURE LOGIN HEADER -->
+            <div class="glass-card p-6 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-orange-500"><i class="fa-solid fa-user-shield"></i> Agent Terminal Login</h2>
+                    <p class="text-xs text-slate-400 mt-1">Authenticate using your phone number and 4-digit PIN.</p>
+                </div>
+                <div class="flex gap-2 w-full sm:w-auto">
+                    <input type="tel" id="agent-login-phone" placeholder="Phone (e.g. 0768666068)" class="bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs outline-none flex-grow">
+                    <input type="password" id="agent-login-pin" maxlength="4" placeholder="PIN" class="bg-slate-900 border border-slate-700 rounded-xl p-2.5 text-xs outline-none w-20 text-center font-mono">
+                    <button id="btn-agent-login" onclick="loginAgentAccount()" class="bg-orange-600 hover:bg-orange-700 px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5">
+                        <span id="txt-agent-login">Login</span>
+                        <div id="anim-agent-login" class="hidden equalizer-wrap">
+                            <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-6">
+                <!-- Vending Card -->
+                <div class="glass-card p-6 rounded-2xl col-span-2 space-y-4">
+                    <h2 class="text-base font-bold text-orange-500 flex items-center gap-2"><i class="fa-solid fa-wallet"></i> Agent Vending Terminal</h2>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1">Customer Receiving Phone</label>
+                            <input type="tel" id="vending-customer" placeholder="e.g. 0799887766" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 outline-none text-xs">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 mb-1">Airtime Amount (KES)</label>
+                            <input type="number" id="vending-amount" placeholder="e.g. 50" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 outline-none text-xs">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-2">Vending Method</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <label class="flex flex-col p-3 rounded-lg border border-slate-700 bg-slate-900 cursor-pointer hover:border-orange-500">
+                                <div class="flex items-center gap-2 font-bold text-xs"><input type="radio" name="agentPayMethod" value="FLOAT" checked> Pre-Paid Float</div>
+                                <span class="text-[10px] text-green-400 mt-1">3% Instant Commission</span>
+                            </label>
+                            <label class="flex flex-col p-3 rounded-lg border border-slate-700 bg-slate-900 cursor-pointer hover:border-orange-500">
+                                <div class="flex items-center gap-2 font-bold text-xs"><input type="radio" name="agentPayMethod" value="STK_PROMPT"> M-Pesa Prompt</div>
+                                <span class="text-[10px] text-green-400 mt-1">1% - 2% Commission</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div id="agent-payer-selection" class="hidden">
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Who is Paying STK Prompt?</label>
+                        <select id="agent-payer-type" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 outline-none text-xs">
+                            <option value="AGENT">I will pay (Over counter cash) - Earn 2%</option>
+                            <option value="CUSTOMER">Customer pays directly - Earn 1%</option>
+                        </select>
+                    </div>
+
+                    <button id="btn-agent-vend" onclick="processAgentOrder()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 rounded-xl transition text-xs flex justify-center items-center gap-2">
+                        <span id="txt-agent-vend">Process Vending Order</span>
+                        <div id="anim-agent-vend" class="hidden equalizer-wrap">
+                            <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
+                        </div>
+                    </button>
+                </div>
+
+                <!-- Stats & Float Top-up Column -->
+                <div class="space-y-4">
+                    <div class="glass-card p-6 rounded-2xl space-y-3">
+                        <h3 class="text-xs font-bold text-orange-500 uppercase tracking-wider">Float Wallet</h3>
+                        <div class="text-2xl font-black text-green-400 font-mono" id="stat-float">KES 0.00</div>
+                        <div class="flex justify-between text-xs pt-2 border-t border-slate-800">
+                            <span class="text-slate-400">STK Commissions:</span>
+                            <span class="font-bold text-orange-400 font-mono" id="stat-stk">KES 0.00</span>
+                        </div>
+                        <div class="flex justify-between text-xs">
+                            <span class="text-slate-400">Referral Bonus:</span>
+                            <span class="font-bold text-blue-400 font-mono" id="stat-ref">KES 0.00</span>
+                        </div>
+                    </div>
+
+                    <!-- LOAD FLOAT CARD -->
+                    <div class="glass-card p-6 rounded-2xl space-y-3">
+                        <h3 class="text-xs font-bold text-orange-500 uppercase tracking-wider"><i class="fa-solid fa-plus-circle"></i> Load Float Balance</h3>
+                        <input type="number" id="topup-amount" placeholder="Amount (min 10 KES)" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2.5 text-xs outline-none">
+                        <button id="btn-agent-topup" onclick="processFloatTopup()" class="w-full bg-green-600 hover:bg-green-700 font-bold py-2.5 rounded-xl transition text-xs flex justify-center items-center gap-2">
+                            <span id="txt-agent-topup">Top Up Float via M-Pesa</span>
+                            <div id="anim-agent-topup" class="hidden equalizer-wrap">
+                                <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECTION 3: DEVELOPER SUITE, SANDBOX & KEY ROTATION -->
+        <div id="section-dev" class="main-tab-content hidden space-y-6">
+            
+            <!-- REGISTER / ROTATE KEY CARD -->
+            <div class="glass-card p-6 sm:p-8 rounded-2xl space-y-5">
+                <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                    <div>
+                        <h2 class="text-lg font-bold text-orange-500"><i class="fa-solid fa-key"></i> Developer Security & API Credentials</h2>
+                        <p class="text-xs text-slate-400 mt-0.5">Automate airtime top-ups with high-throughput JSON API at wholesale rates.</p>
+                    </div>
+                    <span class="text-xs px-2.5 py-1 bg-slate-800 text-orange-400 rounded-md font-mono">REST JSON v5.0</span>
+                </div>
+
+                <div class="grid sm:grid-cols-2 gap-4">
+                    <div class="p-4 bg-slate-900/80 rounded-xl border border-slate-800 space-y-3">
+                        <h3 class="text-xs font-bold text-slate-200">Register Developer Profile</h3>
+                        <input type="tel" id="reg-phone" placeholder="Your Safaricom Phone" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs outline-none">
+                        <input type="password" id="reg-pin" maxlength="4" placeholder="Create 4-Digit Security PIN" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs outline-none text-center font-mono">
+                        <button id="btn-dev-reg" onclick="registerAccount()" class="w-full bg-orange-600 hover:bg-orange-700 font-bold py-2 rounded-lg text-xs transition flex justify-center items-center gap-2">
+                            <span id="txt-dev-reg">Generate API Key</span>
+                            <div id="anim-dev-reg" class="hidden equalizer-wrap">
+                                <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
+                            </div>
+                        </button>
+                    </div>
+
+                    <div class="p-4 bg-slate-900/80 rounded-xl border border-slate-800 space-y-3">
+                        <h3 class="text-xs font-bold text-red-400"><i class="fa-solid fa-rotate"></i> Revoke / Rotate Compromised Key</h3>
+                        <input type="tel" id="rot-phone" placeholder="Registered Phone" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs outline-none">
+                        <input type="password" id="rot-pin" maxlength="4" placeholder="Enter 4-Digit PIN" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs outline-none text-center font-mono">
+                        <button id="btn-dev-rot" onclick="rotateApiKey()" class="w-full bg-red-600 hover:bg-red-700 font-bold py-2 rounded-lg text-xs transition flex justify-center items-center gap-2">
+                            <span id="txt-dev-rot">Revoke & Issue New Key</span>
+                            <div id="anim-dev-rot" class="hidden equalizer-wrap">
+                                <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="key-display-box" class="hidden p-3.5 bg-slate-950 border border-green-700 rounded-xl font-mono text-xs text-green-400 break-all flex justify-between items-center">
+                    <span id="active-api-key"></span>
+                    <button onclick="copyActiveKey()" class="px-2 py-1 bg-slate-800 text-slate-200 rounded hover:bg-slate-700 text-xs">Copy</button>
+                </div>
+            </div>
+
+            <!-- INTERACTIVE DEVELOPER SANDBOX -->
+            <div class="glass-card p-6 sm:p-8 rounded-2xl space-y-4">
+                <h2 class="text-lg font-bold text-orange-500"><i class="fa-solid fa-terminal"></i> In-Browser Sandbox Console</h2>
+                <p class="text-xs text-slate-400">Test live requests using your generated API key directly against your backend endpoints.</p>
+
+                <div class="grid sm:grid-cols-3 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Live API Key</label>
+                        <input type="text" id="sb-key" placeholder="vdh_live_..." class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 font-mono text-xs outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Target Phone</label>
+                        <input type="tel" id="sb-phone" placeholder="0712345678" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 font-mono text-xs outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-300 mb-1">Amount (KES)</label>
+                        <input type="number" id="sb-amount" placeholder="50" class="w-full bg-slate-900 border border-slate-700 rounded-lg p-2 font-mono text-xs outline-none">
+                    </div>
+                </div>
+
+                <div class="flex gap-2">
+                    <button id="btn-sb-bal" onclick="runSandboxBalance()" class="bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-2">
+                        <span id="txt-sb-bal">Check Live Balance</span>
+                        <div id="anim-sb-bal" class="hidden equalizer-wrap">
+                            <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
+                        </div>
+                    </button>
+                    <button id="btn-sb-vend" onclick="runSandboxVending()" class="bg-orange-600 hover:bg-orange-700 px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-2">
+                        <span id="txt-sb-vend">Execute Airtime Vending</span>
+                        <div id="anim-sb-vend" class="hidden equalizer-wrap">
+                            <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
+                        </div>
+                    </button>
+                </div>
+
+                <div class="bg-slate-950 p-4 rounded-xl font-mono text-xs text-slate-300 max-h-56 overflow-y-auto border border-slate-800" id="sb-output">
+                    // Console responses will output here in real-time...
+                </div>
+            </div>
+
+            <!-- CODE GENERATOR -->
+            <div class="glass-card p-6 sm:p-8 rounded-2xl space-y-4">
+                <div class="flex flex-wrap justify-between items-center border-b border-slate-800 pb-3 gap-2">
+                    <h2 class="text-base font-bold text-orange-500"><i class="fa-solid fa-code"></i> Integration Code Generators</h2>
+                    <div class="flex flex-wrap gap-1 text-xs font-bold">
+                        <button onclick="switchLangCode('node')" id="btn-lang-node" class="px-2.5 py-1 bg-orange-600 text-white rounded">Node.js</button>
+                        <button onclick="switchLangCode('python')" id="btn-lang-python" class="px-2.5 py-1 bg-slate-800 text-slate-300 rounded">Python</button>
+                        <button onclick="switchLangCode('curl')" id="btn-lang-curl" class="px-2.5 py-1 bg-slate-800 text-slate-300 rounded">cURL</button>
+                        <button onclick="switchLangCode('php')" id="btn-lang-php" class="px-2.5 py-1 bg-slate-800 text-slate-300 rounded">PHP</button>
+                        <button onclick="switchLangCode('java')" id="btn-lang-java" class="px-2.5 py-1 bg-slate-800 text-slate-300 rounded">Java</button>
+                        <button onclick="switchLangCode('go')" id="btn-lang-go" class="px-2.5 py-1 bg-slate-800 text-slate-300 rounded">Go</button>
+                    </div>
+                </div>
+                <pre class="bg-slate-950 p-4 rounded-xl font-mono text-xs text-orange-300 overflow-x-auto border border-slate-800" id="code-snippet-box"></pre>
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- CHECKOUT MODAL (DATA / MINUTES / SMS) -->
+    <div id="checkout-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="glass-card bg-slate-900 border border-slate-700 w-full max-w-md p-6 rounded-2xl shadow-2xl space-y-5 relative">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-orange-500 text-base" id="modal-title">Complete Offer Checkout</h3>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+
+            <div class="p-3 bg-slate-800/60 rounded-xl flex justify-between items-center">
+                <div>
+                    <div class="font-bold text-sm text-slate-100" id="modal-pkg-name">Package Name</div>
+                    <div class="text-xs text-slate-400" id="modal-pkg-desc">Auto-Fulfillment</div>
+                </div>
+                <div class="text-base font-black text-orange-400 font-mono">KES <span id="modal-pkg-price">0</span></div>
+            </div>
+
+            <div class="space-y-3">
+                <div>
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Target Phone (Receiving Bundle)</label>
+                    <input type="tel" id="modal-recipient" placeholder="e.g. 0712345678" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-slate-100 focus:border-orange-500 outline-none text-xs">
+                </div>
+
+                <div class="flex items-center gap-2 pt-1">
+                    <input type="checkbox" id="modal-diff-payer" onchange="toggleModalPayer()" class="w-4 h-4 accent-orange-500 rounded cursor-pointer">
+                    <label for="modal-diff-payer" class="text-xs text-slate-400 cursor-pointer">Pay using a different M-Pesa phone number</label>
+                </div>
+
+                <div id="modal-payer-box" class="hidden">
+                    <label class="block text-xs font-bold text-slate-300 mb-1">Paying M-Pesa Number</label>
+                    <input type="tel" id="modal-payer" placeholder="e.g. 0799887766" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-slate-100 focus:border-orange-500 outline-none text-xs">
+                </div>
+            </div>
+
+            <button id="modal-submit-btn" onclick="submitModalOrder()" class="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-3.5 rounded-xl transition text-xs flex justify-center items-center gap-2">
+                <span id="modal-btn-txt">Pay via M-Pesa STK</span>
+                <div id="modal-anim" class="hidden equalizer-wrap">
+                    <div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div><div class="equalizer-bar"></div>
+                </div>
+            </button>
+        </div>
+    </div>
+
+    <!-- COMING SOON MODAL -->
+    <div id="coming-soon-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="glass-card bg-slate-900 border border-slate-700 w-full max-w-sm p-6 rounded-2xl shadow-2xl space-y-4 text-center">
+            <div class="w-12 h-12 rounded-full bg-orange-500/20 text-orange-500 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-clock-rotate-left"></i>
+            </div>
+            <h3 class="font-bold text-lg text-slate-100" id="cs-title">Service Coming Soon</h3>
+            <p class="text-xs text-slate-400" id="cs-desc">We are finalizing automated carrier conversion channels for Bonga Points and Credo cashouts. Stay tuned!</p>
+            <button onclick="closeComingSoonModal()" class="w-full bg-slate-800 hover:bg-slate-700 font-bold py-2.5 rounded-xl text-xs transition">Understood</button>
+        </div>
+    </div>
+
+    <!-- GENERAL INFORMATION / TERMS / SUPPORT MODAL -->
+    <div id="info-modal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+        <div class="glass-card bg-slate-900 border border-slate-700 w-full max-w-lg p-6 rounded-2xl shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
+                <h3 class="font-bold text-orange-500 text-base" id="info-modal-title">Information</h3>
+                <button onclick="closeInfoModal()" class="text-slate-400 hover:text-white text-lg"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="text-xs text-slate-300 space-y-3 leading-relaxed max-h-80 overflow-y-auto" id="info-modal-content"></div>
+            <button onclick="closeInfoModal()" class="w-full bg-slate-800 hover:bg-slate-700 font-bold py-2.5 rounded-xl text-xs transition">Close</button>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-800 py-6 glass-card mt-12 text-slate-500 text-xs">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <p>&copy; 2026 Vinnie Digital Hub. High-Volume Telecom Vending Gateway.</p>
+            <div class="flex flex-wrap gap-4 text-slate-400">
+                <button onclick="openInfoModal('DOCS')" class="hover:text-orange-500">API Documentation</button>
+                <button onclick="openInfoModal('TERMS')" class="hover:text-orange-500">Terms of Service</button>
+                <button onclick="openInfoModal('REFUND')" class="hover:text-orange-500">Refund Policy</button>
+                <button onclick="openInfoModal('PRIVACY')" class="hover:text-orange-500">Privacy Policy</button>
+                <button onclick="openInfoModal('AGENT_TERMS')" class="hover:text-orange-500">Agent Terms</button>
+                <button onclick="openInfoModal('SUPPORT')" class="hover:text-orange-500">WhatsApp Support</button>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const API_BASE_URL = "https://vinniet-fab463be7796.herokuapp.com";
+
+        let currentAgentProfile = null;
+        let activeModalItem = null;
+
+        // THEME TOGGLE & AUTO SYSTEM CONFIGURATION HANDLERS
+        function updateThemeIcon() {
+            const isLight = document.documentElement.classList.contains('light');
+            const icon = document.getElementById('theme-toggle-icon');
+            if (icon) {
+                icon.className = isLight ? "fa-solid fa-sun text-sm text-orange-500" : "fa-solid fa-moon text-sm";
+            }
+        }
+
+        function toggleTheme() {
+            if (document.documentElement.classList.contains('light')) {
+                document.documentElement.classList.remove('light');
+                localStorage.setItem('vdh-theme', 'dark');
+            } else {
+                document.documentElement.classList.add('light');
+                localStorage.setItem('vdh-theme', 'light');
+            }
+            updateThemeIcon();
+        }
+
+        // Listen for OS system preference changes dynamically
+        window.matchMedia('(prefers-color-scheme: light)').addEventListener('change', (e) => {
+            if (!localStorage.getItem('vdh-theme')) {
+                if (e.matches) {
+                    document.documentElement.classList.add('light');
+                } else {
+                    document.documentElement.classList.remove('light');
+                }
+                updateThemeIcon();
+            }
+        });
+        updateThemeIcon();
+
+        // 1. DATA, MINUTES & SMS CATALOG
+        const CATALOG = {
+            DATA: [
+                { name: "1GB", duration: "1 Hour", price: 19 },
+                { name: "250MB", duration: "24 Hours", price: 20 },
+                { name: "350MB", duration: "7 Days", price: 48 },
+                { name: "1.5GB", duration: "3 Hours", price: 49 },
+                { name: "1.25GB", duration: "Until Midnight", price: 55 },
+                { name: "1GB", duration: "24 Hours", price: 99 },
+                { name: "2.5GB", duration: "7 Days", price: 300 },
+                { name: "6GB", duration: "7 Days", price: 700 }
+            ],
+            MINUTES: [
+                { name: "45 Minutes", duration: "3 Hours", price: 21 },
+                { name: "50 Minutes", duration: "Until Midnight", price: 51 }
+            ],
+            SMS: [
+                { name: "20 SMS", duration: "24 Hours", price: 5 },
+                { name: "200 SMS", duration: "24 Hours", price: 10 },
+                { name: "1000 SMS", duration: "7 Days", price: 30 },
+                { name: "1500 SMS", duration: "1 Month", price: 101 }
+            ]
+        };
+
+        const RESERVED_OFFER_AMOUNTS = [19, 20, 48, 49, 55, 99, 300, 700, 21, 51, 5, 10, 30, 101];
+
+        function renderCatalog() {
+            ['DATA', 'MINUTES', 'SMS'].forEach(cat => {
+                const container = document.getElementById(`${cat.toLowerCase()}-catalog`);
+                if (container) {
+                    container.innerHTML = CATALOG[cat].map(item => `
+                        <div onclick="openCheckoutModal('${item.name}', '${item.duration}', ${item.price}, '${cat}')" class="glass-card p-4 rounded-xl border border-slate-700 hover:border-orange-500 cursor-pointer transition flex justify-between items-center">
+                            <div>
+                                <div class="font-bold text-sm text-slate-100">${item.name}</div>
+                                <div class="text-xs text-slate-400">${item.duration}</div>
+                            </div>
+                            <div class="text-sm font-black text-orange-400 font-mono">KES ${item.price}</div>
+                        </div>
+                    `).join('');
+                }
+            });
+        }
+        renderCatalog();
+
+        // 2. TAB SWITCHING
+        function switchMainTab(tab) {
+            document.querySelectorAll('.main-tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`section-${tab}`).classList.remove('hidden');
+            document.querySelectorAll('header button').forEach(b => {
+                if (b.id.startsWith('tab-btn-')) {
+                    b.classList.remove('tab-btn-active', 'text-white');
+                    b.classList.add('text-slate-300');
+                }
+            });
+            document.getElementById(`tab-btn-${tab}`).classList.add('tab-btn-active', 'text-white');
+        }
+
+        function switchService(srv) {
+            document.querySelectorAll('.service-nav-btn').forEach(b => {
+                b.classList.remove('service-active');
+                b.classList.add('text-slate-400');
+            });
+            const btn = document.getElementById(`srv-${srv}`);
+            if (btn) {
+                btn.classList.add('service-active');
+                btn.classList.remove('text-slate-400');
+            }
+            document.querySelectorAll('.service-view').forEach(v => v.classList.add('hidden'));
+            const view = document.getElementById(`view-${srv}`);
+            if (view) view.classList.remove('hidden');
+        }
+
+        // 3. CARRIER BADGE DETECTION
+        function detectCarrier(phone) {
+            const badge = document.getElementById('carrier-badge');
+            let clean = phone.replace(/\D/g, '');
+            if (clean.startsWith('254')) clean = '0' + clean.slice(3);
+            if (clean.length < 3) {
+                badge.innerText = "Detecting...";
+                badge.className = "text-xs px-2.5 py-0.5 rounded-full font-bold bg-slate-800 text-slate-400";
+                return;
+            }
+            if (/^(070|071|072|079|074|0757|0758|0759|0768|0769|011)/.test(clean)) {
+                badge.innerText = "Safaricom";
+                badge.className = "text-xs px-2.5 py-0.5 rounded-full font-bold bg-green-950 text-green-400 border border-green-800";
+            } else if (/^(073|0750|0751|0752|0753|0754|0755|0756|078|010)/.test(clean)) {
+                badge.innerText = "Airtel";
+                badge.className = "text-xs px-2.5 py-0.5 rounded-full font-bold bg-red-950 text-red-400 border border-red-800";
+            } else if (/^(077)/.test(clean)) {
+                badge.innerText = "Telkom";
+                badge.className = "text-xs px-2.5 py-0.5 rounded-full font-bold bg-yellow-950 text-yellow-400 border border-yellow-800";
+            } else {
+                badge.innerText = "Network Valid";
+                badge.className = "text-xs px-2.5 py-0.5 rounded-full font-bold bg-blue-950 text-blue-400 border border-blue-800";
+            }
+        }
+
+        // 4. EQUALIZER LOADER TOGGLE HELPER
+        function toggleButtonLoader(btnId, txtId, animId, isLoading) {
+            const btn = document.getElementById(btnId);
+            const txt = document.getElementById(txtId);
+            const anim = document.getElementById(animId);
+            if (btn) btn.disabled = isLoading;
+            if (txt) txt.classList.toggle('hidden', isLoading);
+            if (anim) anim.classList.toggle('hidden', !isLoading);
+        }
+
+        function showToast(msg, type = 'success') {
+            const toast = document.getElementById('toast-box');
+            toast.className = `fixed top-6 right-4 z-50 max-w-sm p-4 rounded-xl shadow-2xl border text-xs font-bold flex items-center gap-3 ${
+                type === 'success' ? 'bg-slate-900 border-green-500 text-green-300' : 'bg-slate-900 border-red-500 text-red-300'
+            }`;
+            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check text-green-400' : 'fa-circle-xmark text-red-400'} text-lg"></i> <div>${msg}</div>`;
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 6000);
+        }
+
+        // 5. DIRECT SINGLE AIRTIME
+        function toggleAirtimePayer() {
+            const checked = document.getElementById('airtime-diff-payer').checked;
+            document.getElementById('airtime-payer-box').classList.toggle('hidden', !checked);
+        }
+
+        async function submitAirtimeSingle() {
+            const recipient = document.getElementById('airtime-recipient').value.trim();
+            const amount = Number(document.getElementById('airtime-amount').value.trim());
+            const diffPayer = document.getElementById('airtime-diff-payer').checked;
+            const payer = diffPayer ? document.getElementById('airtime-payer').value.trim() : recipient;
+
+            if (!recipient || !amount) return showToast("Enter recipient and amount.", "error");
+            if (RESERVED_OFFER_AMOUNTS.includes(amount)) {
+                return showToast(`KES ${amount} is a reserved bundle! Buy KES ${amount + 1} for pure airtime.`, "error");
+            }
+
+            toggleButtonLoader('btn-airtime-single', 'txt-airtime-single', 'anim-airtime-single', true);
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/v1/agent/vending-engine`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ customerPhone: recipient, payerPhone: payer, amount: amount })
+                });
+                const data = await res.json();
+                if (data.success) showToast("M-Pesa STK Prompt sent to paying phone!", "success");
+                else showToast(data.error || "Failed", "error");
+            } catch (e) {
+                showToast("Network error connecting to payment gateway.", "error");
+            } finally {
+                toggleButtonLoader('btn-airtime-single', 'txt-airtime-single', 'anim-airtime-single', false);
+            }
+        }
+
+        // 6. BULK AIRTIME (.CSV & EQUAL SPLIT POOL)
+        function toggleBulkAirtimeMode() {
+            const isBulk = document.getElementById('bulk-mode-toggle').checked;
+            document.getElementById('single-airtime-fields').classList.toggle('hidden', isBulk);
+            document.getElementById('bulk-airtime-fields').classList.toggle('hidden', !isBulk);
+        }
+
+        function switchBulkType() {
+            const mode = document.querySelector('input[name="bulkModeType"]:checked').value;
+            const isSplit = mode === "SPLIT";
+            document.getElementById('bulk-split-pool-box').classList.toggle('hidden', !isSplit);
+            document.getElementById('bulk-input-label').innerHTML = isSplit 
+                ? "Recipients List (Enter one phone number per line)" 
+                : "Recipients List (Format: <code>0712345678, 50</code>)";
+            calculateBulk();
+        }
+
+        function handleBulkFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('bulk-input').value = e.target.result.trim();
+                calculateBulk();
+                showToast("Contacts loaded from file.", "success");
+            };
+            reader.readAsText(file);
+        }
+
+        function calculateBulk() {
+            const raw = document.getElementById('bulk-input').value.trim();
+            const mode = document.querySelector('input[name="bulkModeType"]:checked').value;
+
+            if (!raw) {
+                document.getElementById('bulk-count').innerText = "0";
+                document.getElementById('bulk-total').innerText = "0";
+                return;
+            }
+
+            const lines = raw.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+            
+            if (mode === "SPLIT") {
+                const totalPool = Number(document.getElementById('bulk-pool-amount').value.trim()) || 0;
+                document.getElementById('bulk-count').innerText = lines.length;
+                document.getElementById('bulk-total').innerText = totalPool;
+            } else {
+                let total = 0, count = 0;
+                lines.forEach(l => {
+                    const parts = l.split(',');
+                    if (parts.length >= 2 && !isNaN(Number(parts[1]))) {
+                        total += Number(parts[1]);
+                        count++;
+                    }
+                });
+                document.getElementById('bulk-count').innerText = count;
+                document.getElementById('bulk-total').innerText = total;
+            }
+        }
+
+        async function submitAirtimeBulk() {
+            const payer = document.getElementById('bulk-payer').value.trim();
+            const raw = document.getElementById('bulk-input').value.trim();
+            const totalDue = Number(document.getElementById('bulk-total').innerText);
+
+            if (!payer || !raw || totalDue <= 0) return showToast("Provide payer phone, list, and valid amount.", "error");
+
+            toggleButtonLoader('btn-airtime-bulk', 'txt-airtime-bulk', 'anim-airtime-bulk', true);
+
+            setTimeout(() => {
+                showToast(`STK push of KES ${totalDue} initiated on ${payer}!`, "success");
+                toggleButtonLoader('btn-airtime-bulk', 'txt-airtime-bulk', 'anim-airtime-bulk', false);
+            }, 1800);
+        }
+
+        // 7. AGENT LOGIN, VENDING & FLOAT TOP-UP
+        async function loginAgentAccount() {
+            const phone = document.getElementById('agent-login-phone').value.trim();
+            const pin = document.getElementById('agent-login-pin').value.trim();
+            if (!phone || !pin) return showToast("Enter phone and PIN to login.", "error");
+
+            toggleButtonLoader('btn-agent-login', 'txt-agent-login', 'anim-agent-login', true);
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/v1/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, pin })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    currentAgentProfile = data.data;
+                    document.getElementById('stat-float').innerText = `KES ${data.data.floatWalletBalance.toFixed(2)}`;
+                    document.getElementById('stat-stk').innerText = `KES ${data.data.accumulatedSTKEarnings.toFixed(2)}`;
+                    document.getElementById('stat-ref').innerText = `KES ${data.data.accumulatedReferralEarnings.toFixed(2)}`;
+                    document.getElementById('sb-key').value = data.data.apiKey;
+                    showToast("Agent authenticated successfully!", "success");
+                } else {
+                    showToast(data.error || "Login failed.", "error");
+                }
+            } catch (e) {
+                showToast("Connection failed.", "error");
+            } finally {
+                toggleButtonLoader('btn-agent-login', 'txt-agent-login', 'anim-agent-login', false);
+            }
+        }
+
+        document.querySelectorAll('input[name="agentPayMethod"]').forEach(el => {
+            el.addEventListener('change', (e) => {
+                document.getElementById('agent-payer-selection').classList.toggle('hidden', e.target.value !== "STK_PROMPT");
+            });
+        });
+
+        async function processAgentOrder() {
+            if (!currentAgentProfile) return showToast("Please login as an agent first.", "error");
+
+            const customerPhone = document.getElementById('vending-customer').value.trim();
+            const amount = document.getElementById('vending-amount').value.trim();
+            const paymentMethod = document.querySelector('input[name="agentPayMethod"]:checked').value;
+            const payerType = document.getElementById('agent-payer-type').value;
+
+            if (!customerPhone || !amount) return showToast("Enter customer phone and amount.", "error");
+
+            toggleButtonLoader('btn-agent-vend', 'txt-agent-vend', 'anim-agent-vend', true);
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/v1/agent/vending-engine`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        agentPhone: currentAgentProfile.agentPhone,
+                        customerPhone,
+                        amount,
+                        paymentMethod,
+                        payerType
+                    })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(data.message, "success");
+                    if (data.newBalance !== undefined) {
+                        document.getElementById('stat-float').innerText = `KES ${data.newBalance.toFixed(2)}`;
+                    }
+                } else {
+                    showToast(data.error || "Order failed.", "error");
+                }
+            } catch (e) {
+                showToast("Vending failed.", "error");
+            } finally {
+                toggleButtonLoader('btn-agent-vend', 'txt-agent-vend', 'anim-agent-vend', false);
+            }
+        }
+
+        async function processFloatTopup() {
+            const phone = currentAgentProfile ? currentAgentProfile.agentPhone : document.getElementById('agent-login-phone').value.trim();
+            const amount = document.getElementById('topup-amount').value.trim();
+
+            if (!phone || !amount || Number(amount) < 10) {
+                return showToast("Login and enter topup amount (min KES 10).", "error");
+            }
+
+            toggleButtonLoader('btn-agent-topup', 'txt-agent-topup', 'anim-agent-topup', true);
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/v1/agent/topup-float`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, amount })
+                });
+                const data = await res.json();
+                if (data.success) showToast(data.message, "success");
+                else showToast(data.error || "Topup request failed.", "error");
+            } catch (e) {
+                showToast("Topup connection failed.", "error");
+            } finally {
+                toggleButtonLoader('btn-agent-topup', 'txt-agent-topup', 'anim-agent-topup', false);
+            }
+        }
+
+        // 8. DEVELOPER SUITE, REGISTRATION & KEY ROTATION
+        async function registerAccount() {
+            const phone = document.getElementById('reg-phone').value.trim();
+            const pin = document.getElementById('reg-pin').value.trim();
+            if (!phone || pin.length !== 4) return showToast("Enter phone and 4-digit security PIN.", "error");
+
+            toggleButtonLoader('btn-dev-reg', 'txt-dev-reg', 'anim-dev-reg', true);
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/v1/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, pin })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(data.message, "success");
+                    document.getElementById('active-api-key').innerText = data.apiKey;
+                    document.getElementById('sb-key').value = data.apiKey;
+                    document.getElementById('key-display-box').classList.remove('hidden');
+                } else {
+                    showToast(data.error || "Registration failed.", "error");
+                }
+            } catch (e) {
+                showToast("Connection error.", "error");
+            } finally {
+                toggleButtonLoader('btn-dev-reg', 'txt-dev-reg', 'anim-dev-reg', false);
+            }
+        }
+
+        async function rotateApiKey() {
+            const phone = document.getElementById('rot-phone').value.trim();
+            const pin = document.getElementById('rot-pin').value.trim();
+            if (!phone || pin.length !== 4) return showToast("Enter phone and PIN to rotate key.", "error");
+
+            toggleButtonLoader('btn-dev-rot', 'txt-dev-rot', 'anim-dev-rot', true);
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/v1/auth/rotate-key`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ phone, pin })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(data.message, "success");
+                    document.getElementById('active-api-key').innerText = data.newApiKey;
+                    document.getElementById('sb-key').value = data.newApiKey;
+                    document.getElementById('key-display-box').classList.remove('hidden');
+                } else {
+                    showToast(data.error || "Key rotation failed.", "error");
+                }
+            } catch (e) {
+                showToast("Connection failed.", "error");
+            } finally {
+                toggleButtonLoader('btn-dev-rot', 'txt-dev-rot', 'anim-dev-rot', false);
+            }
+        }
+
+        function copyActiveKey() {
+            const key = document.getElementById('active-api-key').innerText;
+            navigator.clipboard.writeText(key);
+            showToast("API Key copied to clipboard!", "success");
+        }
+
+        // 9. DEVELOPER SANDBOX
+        async function runSandboxBalance() {
+            const key = document.getElementById('sb-key').value.trim();
+            if (!key) return showToast("Enter an API Key in the sandbox.", "error");
+
+            toggleButtonLoader('btn-sb-bal', 'txt-sb-bal', 'anim-sb-bal', true);
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/v1/developer/balance`, {
+                    headers: { 'x-api-key': key }
+                });
+                const data = await res.json();
+                document.getElementById('sb-output').innerText = JSON.stringify(data, null, 2);
+            } catch (e) {
+                document.getElementById('sb-output').innerText = `Error: ${e.message}`;
+            } finally {
+                toggleButtonLoader('btn-sb-bal', 'txt-sb-bal', 'anim-sb-bal', false);
+            }
+        }
+
+        async function runSandboxVending() {
+            const key = document.getElementById('sb-key').value.trim();
+            const phone = document.getElementById('sb-phone').value.trim();
+            const amount = document.getElementById('sb-amount').value.trim();
+
+            if (!key || !phone || !amount) return showToast("Fill all sandbox inputs.", "error");
+
+            toggleButtonLoader('btn-sb-vend', 'txt-sb-vend', 'anim-sb-vend', true);
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/v1/developer/send-airtime`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': key,
+                        'x-idempotency-key': 'sb_' + Date.now()
+                    },
+                    body: JSON.stringify({ phone, amount })
+                });
+                const data = await res.json();
+                document.getElementById('sb-output').innerText = JSON.stringify(data, null, 2);
+            } catch (e) {
+                document.getElementById('sb-output').innerText = `Error: ${e.message}`;
+            } finally {
+                toggleButtonLoader('btn-sb-vend', 'txt-sb-vend', 'anim-sb-vend', false);
+            }
+        }
+
+        // 10. MULTI-LANGUAGE CODE GENERATORS
+        const CODE_SAMPLES = {
+            node: `const axios = require('axios');
+const crypto = require('crypto');
+
+async function vendAirtime(recipient, amount) {
+    const res = await axios.post('https://bingwa.vinniedigitalhub.co.ke/api/v1/developer/send-airtime', {
+        phone: recipient,
+        amount: amount
+    }, {
+        headers: {
+            'Content-Type': 'application/json',
+            'x-api-key': 'YOUR_LIVE_API_KEY',
+            'x-idempotency-key': crypto.randomUUID()
+        }
+    });
+    console.log("Success Response:", res.data);
+}
+
+vendAirtime("0712345678", 100);`,
+
+            python: `import requests, uuid
+
+def vend_airtime(recipient, amount):
+    headers = {
+        'Content-Type': 'application/json',
+        'x-api-key': 'YOUR_LIVE_API_KEY',
+        'x-idempotency-key': str(uuid.uuid4())
+    }
+    payload = {
+        'phone': recipient,
+        'amount': amount
+    }
+    res = requests.post('https://bingwa.vinniedigitalhub.co.ke/api/v1/developer/send-airtime', json=payload, headers=headers)
+    print("Response:", res.json())
+
+vend_airtime("0712345678", 100)`,
+
+            curl: `curl -X POST https://bingwa.vinniedigitalhub.co.ke/api/v1/developer/send-airtime \\
+  -H "Content-Type: application/json" \\
+  -H "x-api-key: YOUR_LIVE_API_KEY" \\
+  -H "x-idempotency-key: $(uuidgen)" \\
+  -d '{
+    "phone": "0712345678",
+    "amount": 100
+  }'`,
+
+            php: `<?php
+$curl = curl_init();
+curl_setopt_array($curl, [
+  CURLOPT_URL => "https://bingwa.vinniedigitalhub.co.ke/api/v1/developer/send-airtime",
+  CURLOPT_RETURNTRANSFER => true,
+  CURLOPT_POST => true,
+  CURLOPT_POSTFIELDS => json_encode([
+    "phone" => "0712345678",
+    "amount" => 100
+  ]),
+  CURLOPT_HTTPHEADER => [
+    "Content-Type: application/json",
+    "x-api-key: YOUR_LIVE_API_KEY",
+    "x-idempotency-key: " . uniqid('php_', true)
+  ]
+]);
+
+$response = curl_exec($curl);
+curl_close($curl);
+echo $response;`,
+
+            java: `import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.UUID;
+
+public class VendingClient {
+    public static void main(String[] args) throws Exception {
+        String json = "{\\"phone\\":\\"0712345678\\",\\"amount\\":100}";
+        HttpRequest request = HttpRequest.newBuilder()
+            .uri(URI.create("https://bingwa.vinniedigitalhub.co.ke/api/v1/developer/send-airtime"))
+            .header("Content-Type", "application/json")
+            .header("x-api-key", "YOUR_LIVE_API_KEY")
+            .header("x-idempotency-key", UUID.randomUUID().toString())
+            .POST(HttpRequest.BodyPublishers.ofString(json))
+            .build();
+
+        HttpResponse<String> response = HttpClient.newHttpClient().send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println(response.body());
+    }
+}`,
+
+            go: `package main
+
+import (
+	"bytes"
+	"fmt"
+	"net/http"
+)
+
+func main() {
+	jsonData := []byte(\`{"phone": "0712345678", "amount": 100}\`)
+	req, _ := http.NewRequest("POST", "https://bingwa.vinniedigitalhub.co.ke/api/v1/developer/send-airtime", bytes.NewBuffer(jsonData))
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("x-api-key", "YOUR_LIVE_API_KEY")
+	req.Header.Set("x-idempotency-key", "go_unique_key_123")
+
+	client := &http.Client{}
+	resp, _ := client.Do(req)
+	defer resp.Body.Close()
+	fmt.Println("Status:", resp.Status)
+}`
+        };
+
+        function switchLangCode(lang) {
+            ['node', 'python', 'curl', 'php', 'java', 'go'].forEach(l => {
+                const el = document.getElementById(`btn-lang-${l}`);
+                if (el) el.className = "px-2.5 py-1 bg-slate-800 text-slate-300 rounded";
+            });
+            const activeBtn = document.getElementById(`btn-lang-${lang}`);
+            if (activeBtn) activeBtn.className = "px-2.5 py-1 bg-orange-600 text-white rounded";
+            document.getElementById('code-snippet-box').innerText = CODE_SAMPLES[lang];
+        }
+        switchLangCode('node');
+
+        // 11. CHECKOUT MODAL HANDLERS
+        function openCheckoutModal(name, desc, price, type) {
+            activeModalItem = { name, desc, price, type };
+            document.getElementById('modal-title').innerText = `${type} Offer Checkout`;
+            document.getElementById('modal-pkg-name').innerText = name;
+            document.getElementById('modal-pkg-desc').innerText = desc;
+            document.getElementById('modal-pkg-price').innerText = price;
+            document.getElementById('checkout-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('checkout-modal').classList.add('hidden');
+        }
+
+        function toggleModalPayer() {
+            const checked = document.getElementById('modal-diff-payer').checked;
+            document.getElementById('modal-payer-box').classList.toggle('hidden', !checked);
+        }
+
+        async function submitModalOrder() {
+            const recipient = document.getElementById('modal-recipient').value.trim();
+            const diffPayer = document.getElementById('modal-diff-payer').checked;
+            const payer = diffPayer ? document.getElementById('modal-payer').value.trim() : recipient;
+
+            if (!recipient) return showToast("Enter receiving phone number.", "error");
+
+            toggleButtonLoader('modal-submit-btn', 'modal-btn-txt', 'modal-anim', true);
+
+            try {
+                const res = await fetch(`${API_BASE_URL}/api/v1/agent/vending-engine`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ customerPhone: recipient, payerPhone: payer, amount: activeModalItem.price })
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(`STK push sent for ${activeModalItem.name}! Enter PIN on phone.`, "success");
+                    closeModal();
+                } else {
+                    showToast(data.error || "STK Trigger failed.", "error");
+                }
+            } catch (e) {
+                showToast("Network error executing checkout.", "error");
+            } finally {
+                toggleButtonLoader('modal-submit-btn', 'modal-btn-txt', 'modal-anim', false);
+            }
+        }
+
+        // 12. COMING SOON MODAL
+        function openComingSoonModal(title) {
+            document.getElementById('cs-title').innerText = title;
+            document.getElementById('coming-soon-modal').classList.remove('hidden');
+        }
+
+        function closeComingSoonModal() {
+            document.getElementById('coming-soon-modal').classList.add('hidden');
+        }
+
+        // 13. INFORMATION / DOCS / TERMS MODAL
+        function openInfoModal(type) {
+            const modal = document.getElementById('info-modal');
+            const title = document.getElementById('info-modal-title');
+            const content = document.getElementById('info-modal-content');
+
+            if (type === 'DOCS') {
+                title.innerText = "Developer REST API Reference";
+                content.innerHTML = `
+                    <p>Integrate programmatic airtime recharge into your bots, web platforms, or billing systems with 3% wholesale margin.</p>
+                    <div class="bg-slate-950 p-2.5 rounded font-mono text-[11px] text-orange-400">Endpoint: POST https://airtime-backend-w63z.onrender.com/api/v1/developer/send-airtime</div>
+                    <p><strong>Required Headers:</strong><br>
+                    • <code>x-api-key</code>: Your live developer key.<br>
+                    • <code>x-idempotency-key</code>: Unique UUID string per transaction to safeguard against double charging.</p>
+                    <p><strong>Check Balance:</strong><br>
+                    <code>GET /api/v1/developer/balance</code> with your <code>x-api-key</code> header.</p>
+                `;
+            } else if (type === 'TERMS') {
+                title.innerText = "Terms of Service";
+                content.innerHTML = `
+                    <p><strong>1. Introduction & Overview:</strong> Welcome to Vinnie Digital Hub. By accessing or using our developer APIs, vending terminals, or digital services, you agree to be bound by these legal terms.</p>
+                    <p><strong>2. Services Provided:</strong> Vinnie Digital Hub operates an automated digital infrastructure providing airtime vending, telecommunications bundles, data packages, and developer API distribution across licensed mobile operators in Kenya.</p>
+                    <p><strong>3. Payment Processing:</strong> Payments are processed securely via verified mobile money rails (M-Pesa) and certified payment gateways including Visa and Mastercard. All card transactions conform to strict 3D-Secure standards. We do not store full card details or CVVs on our local servers.</p>
+                    <p><strong>4. User Obligations:</strong> Users agree not to misuse automated endpoints, initiate unauthorized stress tests, or exploit platform infrastructure. Misuse may result in immediate suspension of developer keys and float access.</p>
+                    <p><strong>5. Governing Law:</strong> These terms are governed and construed under the legal framework of the Republic of Kenya.</p>
+                `;
+            } else if (type === 'REFUND') {
+                title.innerText = "Refund & Cancellation Policy";
+                content.innerHTML = `
+                    <p><strong>1. Digital Delivery:</strong> Due to the instant and automated fulfillment of telecommunication airtime, data vouchers, and digital bundles, successfully completed orders dispatched to the designated phone number are considered consumed and cannot be reversed or returned.</p>
+                    <p><strong>2. Failed Transactions & Auto-Reversals:</strong> If your card or mobile money wallet is debited but our gateway fails to deliver the bundle or airtime due to carrier network timeout, our automated system initiates a reconciliation review. Reversals or wallet credits are completed within 24 to 48 hours.</p>
+                    <p><strong>3. Incorrect Destination Numbers:</strong> Customers and agents are solely responsible for ensuring the recipient phone number entered is accurate. We cannot recall or refund value dispatched to an unintended recipient.</p>
+                    <p><strong>4. Dispute Resolution:</strong> To lodge a dispute regarding a failed transaction, provide your transaction reference, phone number, and timestamp to our support desk. Legitimate billing issues are addressed within 1 business day.</p>
+                `;
+            } else if (type === 'PRIVACY') {
+                title.innerText = "Privacy Policy";
+                content.innerHTML = `
+                    <p><strong>1. Data Collected:</strong> We collect necessary transaction metadata including recipient phone numbers, payer mobile numbers, transaction amounts, and IP addresses exclusively to execute, verify, and reconcile requested telecommunications deliveries.</p>
+                    <p><strong>2. Financial Data Security:</strong> All debit/credit card and mobile money billing requests are handled by accredited, PCI-compliant payment gateways. We never inspect, record, or retain sensitive payment instrument credentials.</p>
+                    <p><strong>3. Data Protection:</strong> We do not sell, rent, or distribute personal information to third parties. Data is maintained strictly in accordance with the Kenya Data Protection Act.</p>
+                `;
+            } else if (type === 'AGENT_TERMS') {
+                title.innerText = "Agent Terms & Commissions";
+                content.innerHTML = `
+                    <p><strong>1. Float Vending Margin:</strong> Agents earn an immediate 3% wholesale discount on all prepaid float transactions.</p>
+                    <p><strong>2. STK Prompt Mode:</strong> Agents earn 2% commission if paying over-the-counter cash or 1% if the customer pays on their own handset.</p>
+                    <p><strong>3. Passive Referral Bonus:</strong> Earn 1% lifetime commission on all transaction volume processed by downline agents registered under your phone number.</p>
+                `;
+            } else if (type === 'SUPPORT') {
+                title.innerText = "Engineering & Support Desk";
+                content.innerHTML = `
+                    <p>For transaction delays, wallet reconciliations, or API support, contact our desk:</p>
+                    <p><strong>Business:</strong> Vinnie Digital Hub</p>
+                    <p><strong>WhatsApp:</strong> +254 784 910 115</p>
+                    <p><strong>Hours:</strong> 24/7 Monitored Gateway</p>
+                `;
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeInfoModal() {
+            document.getElementById('info-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
