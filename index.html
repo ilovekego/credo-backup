@@ -677,7 +677,7 @@
     </footer>
 
     <script>
-        const API_BASE_URL = "https://airtm-cf56cbc1530a.herokuapp.com";
+        const API_BASE_URL = "https://developer.vinniedigitalhub.co.ke";
 
         let currentAgentProfile = null;
         let activeModalItem = null;
@@ -1186,7 +1186,7 @@
 const crypto = require('crypto');
 
 async function vendAirtime(recipient, amount) {
-    const res = await axios.post('https://bingwa.vinniedigitalhub.co.ke/api/v1/developer/send-airtime', {
+    const res = await axios.post('https://developer.vinniedigitalhub.co.ke/api/v1/developer/send-airtime', {
         phone: recipient,
         amount: amount
     }, {
@@ -1213,12 +1213,12 @@ def vend_airtime(recipient, amount):
         'phone': recipient,
         'amount': amount
     }
-    res = requests.post('https://bingwa.vinniedigitalhub.co.ke/api/v1/developer/send-airtime', json=payload, headers=headers)
+    res = requests.post('https://developer.vinniedigitalhub.co.ke/api/v1/developer/send-airtime', json=payload, headers=headers)
     print("Response:", res.json())
 
 vend_airtime("0712345678", 100)`,
 
-            curl: `curl -X POST https://bingwa.vinniedigitalhub.co.ke/api/v1/developer/send-airtime \\
+            curl: `curl -X POST https://developer.vinniedigitalhub.co.ke/api/v1/developer/send-airtime \\
   -H "Content-Type: application/json" \\
   -H "x-api-key: YOUR_LIVE_API_KEY" \\
   -H "x-idempotency-key: $(uuidgen)" \\
@@ -1230,7 +1230,7 @@ vend_airtime("0712345678", 100)`,
             php: `<?php
 $curl = curl_init();
 curl_setopt_array($curl, [
-  CURLOPT_URL => "https://bingwa.vinniedigitalhub.co.ke/api/v1/developer/send-airtime",
+  CURLOPT_URL => "https://developer.vinniedigitalhub.co.ke/api/v1/developer/send-airtime",
   CURLOPT_RETURNTRANSFER => true,
   CURLOPT_POST => true,
   CURLOPT_POSTFIELDS => json_encode([
@@ -1258,7 +1258,7 @@ public class VendingClient {
     public static void main(String[] args) throws Exception {
         String json = "{\\"phone\\":\\"0712345678\\",\\"amount\\":100}";
         HttpRequest request = HttpRequest.newBuilder()
-            .uri(URI.create("https://bingwa.vinniedigitalhub.co.ke/api/v1/developer/send-airtime"))
+            .uri(URI.create("https://developer.vinniedigitalhub.co.ke/api/v1/developer/send-airtime"))
             .header("Content-Type", "application/json")
             .header("x-api-key", "YOUR_LIVE_API_KEY")
             .header("x-idempotency-key", UUID.randomUUID().toString())
@@ -1280,7 +1280,7 @@ import (
 
 func main() {
 	jsonData := []byte(\`{"phone": "0712345678", "amount": 100}\`)
-	req, _ := http.NewRequest("POST", "https://bingwa.vinniedigitalhub.co.ke/api/v1/developer/send-airtime", bytes.NewBuffer(jsonData))
+	req, _ := http.NewRequest("POST", "https://developer.vinniedigitalhub.co.ke/api/v1/developer/send-airtime", bytes.NewBuffer(jsonData))
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("x-api-key", "YOUR_LIVE_API_KEY")
 	req.Header.Set("x-idempotency-key", "go_unique_key_123")
@@ -1388,8 +1388,8 @@ func main() {
                 content.innerHTML = `
                     <p>Integrate programmatic airtime recharge into your bots, web platforms, or billing systems with 3% wholesale margin.</p>
                     <div class="bg-slate-950 p-2.5 rounded font-mono text-[11px] text-orange-400 flex justify-between items-center gap-2">
-                        <span>Endpoint: POST https://airtime-backend-w63z.onrender.com/api/v1/developer/send-airtime</span>
-                        <button onclick="copyText('https://airtime-backend-w63z.onrender.com/api/v1/developer/send-airtime', 'Endpoint copied!')" class="copy-btn text-slate-400 hover:text-orange-400 flex-shrink-0"><i class="fa-regular fa-copy"></i></button>
+                        <span>Endpoint: POST https://developer.vinniedigitalhub.co.ke/api/v1/developer/send-airtime</span>
+                        <button onclick="copyText('https://developer.vinniedigitalhub.co.ke/api/v1/developer/send-airtime', 'Endpoint copied!')" class="copy-btn text-slate-400 hover:text-orange-400 flex-shrink-0"><i class="fa-regular fa-copy"></i></button>
                     </div>
                     <p><strong>Required Headers:</strong><br>
                     &bull; <code>x-api-key</code>: Your live developer key.<br>
